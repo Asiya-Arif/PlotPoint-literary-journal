@@ -1,42 +1,112 @@
-PlotPoint&
-PlotPoint& is a visual reading archive and literary journal that transforms your Goodreads library into an immersive digital experience. By uploading your Goodreads export, you can explore your reading history through beautifully rendered bookshelves and deep analytical insights.
+# 📚 PlotPoint&
 
-📖 Features
-1. Personal Stacks (Visual Library)
-Dynamic Bookshelf: Browse your collection on a visual shelf where each book is represented by a unique spine.
+PlotPoint& is a visual reading archive and literary journal that transforms your Goodreads library into an immersive digital experience.
 
-Status Filtering: Quickly toggle between "All", "Read", "Currently Reading", and "Want to Read" views.
+By uploading your Goodreads export, you can explore your reading history through beautifully rendered bookshelves and deep analytical insights — turning raw data into a living, breathing reading story.
 
-Search & Discovery: Instantly find specific volumes within your personal library using the integrated search bar.
+---
 
-Metadata Management: Track series info, genres, personal ratings, and detailed notes for every book in your collection.
+## ✨ Overview
 
-2. The Infinite Journal
-Reading Story: A data-driven journal that narrates your reading habits and trends over time.
+PlotPoint& bridges literature and data. It allows readers to:
 
-Interactive Analytics: View visual breakdowns of your reading preferences and top picks through custom charts.
+- Visualize their personal library
+- Analyze reading patterns and trends
+- Reflect on their literary journey
+- Experience their bookshelf through an immersive, journal-style interface
 
-Immersive Interface: Features a "book-open" layout with page-flip animations and a decorative bookmark tracking your progress.
+---
 
-3. Goodreads Integration
-Easy Import: Simply export your library as a CSV from Goodreads and drag it into the app to get started.
+## 📖 Features
 
-Automated Cataloguing: The system automatically parses your export to build your digital library and journal.
+### 🗂️ Personal Stacks (Visual Library)
 
-🛠️ Technical Stack
-Frontend: Built with a focus on high-fidelity typography and layout.
+**Dynamic Bookshelf**  
+Browse your collection on layered, visually rendered bookshelves where each book is represented by a unique spine.
 
-Tailwind CSS: For modern, responsive styling.
+**Status Filtering**  
+Toggle between:
+- All
+- Read
+- Currently Reading
+- Want to Read
 
-Chart.js: Powering the analytical data visualizations.
+**Search & Discovery**  
+Quickly locate specific titles using the integrated search bar.
 
-HTML5 Canvas: Used for background particle effects.
+**Metadata Management**  
+Track and manage:
+- Series information
+- Genres
+- Personal ratings
+- Detailed notes
 
-Typography: Utilizes a combination of Playfair Display (Serif), Lora (Serif), and Inter (Sans-serif) for a classic literary feel.
+---
 
-🚀 Getting Started
-Export Goodreads Data: Go to your Goodreads account settings and export your library as a .csv file.
+### 📓 The Infinite Journal
 
-Upload to PlotPoint&: Drag and drop your CSV into the "Connect" zone on the landing page.
+A data-driven journal that narrates your reading habits over time.
 
-Explore: Once the "Cataloguing" process completes, head to the Library to see your shelves or the Journal to see your reading analytics.
+**Reading Story**  
+Transforms your reading history into an evolving narrative.
+
+**Interactive Analytics**  
+Explore:
+- Genre distribution
+- Reading trends
+- Top authors
+- Rating patterns
+
+**Immersive Interface**
+- “Book-open” layout
+- Page-flip animations
+- Decorative bookmark tracking progress
+- Literary typography-driven design
+
+---
+
+### 🔗 Goodreads Integration
+
+**Easy Import**
+1. Export your Goodreads library as a `.csv` file.
+2. Drag and drop it into the app.
+
+**Automated Cataloguing**
+PlotPoint& automatically parses your export to build:
+- Your digital bookshelf
+- Your reading journal
+- Your analytics dashboard
+
+---
+
+## 🛠️ Technical Stack
+
+**Frontend**
+Built with a focus on high-fidelity typography and immersive layout design.
+
+- Tailwind CSS — Modern, responsive styling
+- Chart.js — Interactive data visualizations
+- HTML5 Canvas — Background particle effects
+
+---
+
+## 🚀 Getting Started
+
+### 1️⃣ Export Goodreads Data
+- Go to your Goodreads account settings
+- Export your library as a `.csv` file
+
+### 2️⃣ Upload to PlotPoint&
+- Drag and drop your CSV into the **Connect** zone on the landing page
+
+### 3️⃣ Explore
+Once cataloguing completes:
+- Visit **Library** to explore your shelves
+- Visit **Journal** to view your reading analytics
+
+---
+
+## 🎯 Vision
+
+PlotPoint& is more than a tracker.  
+It is a reflective literary space — where data becomes memory, and memory becomes story.
