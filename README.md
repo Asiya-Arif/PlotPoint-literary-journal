@@ -6,6 +6,13 @@ By uploading your Goodreads export, you can explore your reading history through
 
 ---
 
+## 🌐 Live Demo
+
+Explore PlotPoint& here:  
+https://plotpoint-dusky.vercel.app/
+
+---
+
 ## ✨ Overview
 
 PlotPoint& bridges literature and data. It allows readers to:
@@ -81,7 +88,7 @@ PlotPoint& automatically parses your export to build:
 
 ## 🛠️ Technical Stack
 
-**Frontend**
+**Frontend**  
 Built with a focus on high-fidelity typography and immersive layout design.
 
 - Tailwind CSS — Modern, responsive styling
