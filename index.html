@@ -2041,30 +2041,6 @@ function mobileNav(page){
 ['si-email','si-pass'].forEach(id=>document.getElementById(id)?.addEventListener('keydown',e=>e.key==='Enter'&&doSignIn()));
 ['su-email','su-pass','su-name'].forEach(id=>document.getElementById(id)?.addEventListener('keydown',e=>e.key==='Enter'&&doSignUp()));
 
-// Firebase configured
-type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyAu7tCf90trsDSQEU6Zzf-j6_-o_QjI36g",
-    authDomain: "plotpoint-3b073.firebaseapp.com",
-    projectId: "plotpoint-3b073",
-    storageBucket: "plotpoint-3b073.firebasestorage.app",
-    messagingSenderId: "324956598171",
-    appId: "1:324956598171:web:22f05df09fba6106ce7b3e",
-    measurementId: "G-M7BELZRJLM"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-
 </script>
 </body>
 </html>
