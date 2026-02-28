@@ -369,54 +369,6 @@ nav .desktop-nav { display:flex !important; }
 </style>
 
 <!-- Firebase SDKs -->
-<script type="module">
-  // Firebase config — replace with your own project config
-  // To use: Go to console.firebase.google.com → create project → 
-  // add web app → copy firebaseConfig below
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-  import { getFirestore, doc, setDoc, getDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-
-  // ── PASTE YOUR FIREBASE CONFIG HERE ──
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const googleProvider = new GoogleAuthProvider();
-  
-  // Expose to global scope
-  window._fbAuth = auth;
-  window._fbDb = db;
-  window._fbSignInEmail = (e,p) => signInWithEmailAndPassword(auth,e,p);
-  window._fbCreateUser = (e,p,n) => createUserWithEmailAndPassword(auth,e,p).then(r=>updateProfile(r.user,{displayName:n}).then(()=>r));
-  window._fbGoogleSignIn = () => signInWithPopup(auth, googleProvider);
-  window._fbSignOut = () => signOut(auth);
-  window._fbSaveData = async (uid, data) => {
-    try {
-      await setDoc(doc(db,'users',uid), data, {merge:true});
-      return true;
-    } catch(e) { console.warn('Firestore save error:',e); return false; }
-  };
-  window._fbLoadData = async (uid) => {
-    try {
-      const snap = await getDoc(doc(db,'users',uid));
-      return snap.exists() ? snap.data() : null;
-    } catch(e) { console.warn('Firestore load error:',e); return null; }
-  };
-  window._fbOnAuth = (cb) => onAuthStateChanged(auth, cb);
-  
-  // Signal that Firebase is ready
-  window._fbReady = true;
-  document.dispatchEvent(new Event('fb-ready'));
-</script>
 </head>
 <body>
 
@@ -725,6 +677,34 @@ nav .desktop-nav { display:flex !important; }
 </div>
 
 <script type="module">
+// ══ FIREBASE ══
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAu7tCf90trsDSQEU6Zzf-j6_-o_QjI36g",
+  authDomain: "plotpoint-3b073.firebaseapp.com",
+  projectId: "plotpoint-3b073",
+  storageBucket: "plotpoint-3b073.firebasestorage.app",
+  messagingSenderId: "324956598171",
+  appId: "1:324956598171:web:22f05df09fba6106ce7b3e"
+};
+
+const _app = initializeApp(firebaseConfig);
+const _auth = getAuth(_app);
+const _db = getFirestore(_app);
+const _googleProvider = new GoogleAuthProvider();
+
+// Auth helpers used by app code below
+const _fbSignInEmail  = (e,p) => signInWithEmailAndPassword(_auth,e,p);
+const _fbCreateUser   = (e,p,n) => createUserWithEmailAndPassword(_auth,e,p).then(r=>updateProfile(r.user,{displayName:n}).then(()=>r));
+const _fbGoogleSignIn = () => signInWithPopup(_auth, _googleProvider);
+const _fbSignOut      = () => signOut(_auth);
+const _fbSaveData     = async (uid, data) => { try{ await setDoc(doc(_db,'users',uid),data,{merge:true}); return true; }catch(e){ console.warn('Save error:',e); return false; } };
+const _fbLoadData     = async (uid) => { try{ const s=await getDoc(doc(_db,'users',uid)); return s.exists()?s.data():null; }catch(e){ console.warn('Load error:',e); return null; } };
+const _fbOnAuth       = (cb) => onAuthStateChanged(_auth, cb);
+
 // ══ PALETTE ══
 const SPINE_COLORS=['#7B52CC','#E8512A','#2A9980','#3A7FD4','#F0A500','#E03E7A','#1A6B55','#9966CC','#D45A00','#2AB87A','#C62828','#1A3A8C','#E53935','#0D47A1','#E8762A','#1976D2','#B71C1C','#283593','#EF5350','#0D5FA1','#6A1B9A','#2E8B32','#D84315','#4A148C','#009688','#880E4F','#1A237E','#558B2F','#4E342E','#006B6B'];
 const PALETTE=['#7B3FE4','#E8321A','#00897B','#1565C0','#F9C200','#E0407A','#C62828','#0D3B8C','#E53935','#1B5E20','#AD63D4','#BF360C','#1976D2','#B71C1C','#00838F'];
@@ -1783,14 +1763,16 @@ function emptyState(msg){return`<p style="opacity:.35;font-style:italic;font-siz
 // ══ HERO SPINES ══
 (()=>{
   const data=[
-    {title:"PlotPoint&",color:"#7B3FE4",pages:300},
-    {title:"Discover",color:"#E8321A",pages:350},
-    {title:"The",color:"#00897B",pages:393},
-    {title:"Patterns",color:"#0D3B8C",pages:476},
-    {title:"In",color:"#F9C200",pages:320},
-    {title:"Your",color:"#E0407A",pages:273},
-    {title:"Pages",color:"#C62828",pages:485},
-
+    {title:"The Midnight Library",color:"#7B3FE4",pages:300},
+    {title:"Educated",color:"#E8321A",pages:350},
+    {title:"Circe",color:"#00897B",pages:393},
+    {title:"Project Hail Mary",color:"#0D3B8C",pages:476},
+    {title:"Atomic Habits",color:"#F9C200",pages:320},
+    {title:"Normal People",color:"#E0407A",pages:273},
+    {title:"Pachinko",color:"#C62828",pages:485},
+    {title:"Rebecca",color:"#AD63D4",pages:449},
+    {title:"Dune",color:"#1976D2",pages:412},
+    {title:"Klara and the Sun",color:"#2E7D32",pages:307},
   ];
   const strip=document.getElementById('spine-strip');
   data.forEach((b,i)=>{
@@ -1804,47 +1786,6 @@ function emptyState(msg){return`<p style="opacity:.35;font-style:italic;font-siz
     strip.appendChild(el);
   });
 })();
-
-// ══ INIT ══
-// ── Updated init: use auth flow ──
-initAuth();
-
-// Update mobile auth button text when user changes
-function updateMobileAuthBtn(){
-  const btn = document.getElementById('mobile-auth-btn');
-  if(btn) btn.textContent = currentUser ? 'Sign Out' : 'Sign In';
-}
-
-// Patch updateUserUI to also update dropdown email
-const _origUpdateUserUI = updateUserUI;
-const _patchedUpdateUserUI = function(user){
-  _origUpdateUserUI(user);
-  const dd = document.getElementById('dd-email');
-  if(dd && user) dd.textContent = user.email || '';
-};
-window.updateUserUI = _patchedUpdateUserUI;
-
-// Close dropdown when clicking outside
-document.addEventListener('click', function(e){
-  const pill = document.getElementById('user-pill');
-  const dd = document.getElementById('user-dropdown');
-  if(dd && pill && !pill.contains(e.target)){
-    dd.style.display = 'none';
-  }
-});
-
-// If Firebase not configured, fall back gracefully
-setTimeout(()=>{
-  if(!window._fbReady){
-    // Firebase not configured — just load locally and continue
-    loadLibrary();
-    buildJournalToc();
-    updateJournalNav();
-    showPage('connect');
-    setTimeout(refreshShelfLabelsUI, 50);
-    document.getElementById('auth-modal').classList.remove('show');
-  }
-}, 2500);
 
 // ══ AUTH & CLOUD SYNC ══
 let currentUser = null;
@@ -1867,8 +1808,7 @@ async function doSignIn(){
   if(!e||!p){ authError('si-error','Please enter email and password.'); return; }
   authError('si-error','');
   try {
-    if(window._fbSignInEmail) await window._fbSignInEmail(e, p);
-    else authError('si-error','Firebase not configured. See setup guide.');
+    await _fbSignInEmail(e, p);
   } catch(err) {
     const msgs = { 'auth/wrong-password':'Incorrect password.', 'auth/user-not-found':'No account found with this email.', 'auth/invalid-email':'Invalid email address.', 'auth/too-many-requests':'Too many attempts. Please wait.' };
     authError('si-error', msgs[err.code] || err.message);
@@ -1884,8 +1824,7 @@ async function doSignUp(){
   if(p.length<6){ authError('su-error','Password must be at least 6 characters.'); return; }
   authError('su-error','');
   try {
-    if(window._fbCreateUser) await window._fbCreateUser(e, p, n);
-    else authError('su-error','Firebase not configured. See setup guide.');
+    await _fbCreateUser(e, p, n);
   } catch(err) {
     const msgs = { 'auth/email-already-in-use':'An account with this email already exists.', 'auth/invalid-email':'Invalid email address.', 'auth/weak-password':'Password is too weak.' };
     authError('su-error', msgs[err.code] || err.message);
@@ -1894,8 +1833,7 @@ async function doSignUp(){
 
 async function doGoogleSignIn(){
   try {
-    if(window._fbGoogleSignIn) await window._fbGoogleSignIn();
-    else alert('Firebase not configured. See the setup guide in the file comments.');
+    await _fbGoogleSignIn();
   } catch(err) {
     authError('si-error', err.code==='auth/popup-closed-by-user' ? '' : (err.message||'Google sign-in failed.'));
   }
@@ -1926,9 +1864,11 @@ function updateUserUI(user){
   const signInBtn = document.getElementById('sign-in-btn');
   const av = document.getElementById('user-avatar');
   const dd = document.getElementById('user-dropdown');
+  const ddEmail = document.getElementById('dd-email');
   if(user){
     pill.style.display='flex';
     signInBtn.style.display='none';
+    if(ddEmail) ddEmail.textContent = user.email || '';
     if(user.photoURL){
       av.innerHTML=`<img src="${user.photoURL}" alt="" referrerpolicy="no-referrer">`;
     } else {
@@ -1943,9 +1883,8 @@ function updateUserUI(user){
 }
 
 async function loadCloudData(uid){
-  if(!window._fbLoadData) return;
   try {
-    const data = await window._fbLoadData(uid);
+    const data = await _fbLoadData(uid);
     if(data){
       if(data.library) { library = data.library; library.forEach(b=>{ if(!b.tags)b.tags=[]; }); saveLibraryLocal(); }
       if(data.shelfLabels) { shelfLabels = data.shelfLabels; saveShelfLabels(); }
@@ -1964,10 +1903,10 @@ function scheduleSave(){
 }
 
 async function doCloudSave(){
-  if(!currentUser || !window._fbSaveData) { saveLibraryLocal(); showSyncDot(false); return; }
+  if(!currentUser) { saveLibraryLocal(); showSyncDot(false); return; }
   showSyncDot(true, true);
   try {
-    const ok = await window._fbSaveData(currentUser.uid, { library, shelfLabels, lastSaved: Date.now() });
+    const ok = await _fbSaveData(currentUser.uid, { library, shelfLabels, lastSaved: Date.now() });
     if(ok) { saveLibraryLocal(); }
   } catch(e){ console.warn('Cloud save error:', e); saveLibraryLocal(); }
   showSyncDot(false);
@@ -1985,7 +1924,7 @@ function saveLibrary(){ saveLibraryLocal(); if(currentUser) scheduleSave(); }
 function saveLibraryLocal(){ try{ localStorage.setItem(LOCAL_KEY, JSON.stringify(library)); }catch(e){} }
 
 function doSignOut(){
-  if(window._fbSignOut) window._fbSignOut().catch(()=>{});
+  _fbSignOut().catch(()=>{});
   currentUser = null;
   updateUserUI(null);
   showAuthModal();
@@ -2006,63 +1945,19 @@ document.addEventListener('click', e=>{
   }
 });
 
-// Init auth - wait for Firebase or show modal
+// Init auth — Firebase is always ready in this module
 function initAuth(){
-  if(window._fbReady && window._fbOnAuth){
-    window._fbOnAuth(handleAuthChange);
-  } else {
-    // Firebase not configured — use localStorage fallback
-    document.addEventListener('fb-ready', ()=>{ 
-      if(window._fbOnAuth) window._fbOnAuth(handleAuthChange);
-    });
-    // Show auth modal after brief delay
-    setTimeout(()=>{
-      if(!currentUser) showAuthModal();
-    }, 400);
-  }
+  _fbOnAuth(handleAuthChange);
 }
 
-// Mobile nav
-document.getElementById('mobile-menu-btn').addEventListener('click', ()=>{
-  document.getElementById('mobile-nav').classList.add('open');
-  document.body.style.overflow='hidden';
-});
-document.getElementById('mobile-nav-close').addEventListener('click', ()=>{
-  document.getElementById('mobile-nav').classList.remove('open');
-  document.body.style.overflow='';
-});
-function mobileNav(page){
-  document.getElementById('mobile-nav').classList.remove('open');
-  document.body.style.overflow='';
-  showPage(page);
-}
 
 // Enter key on auth inputs
 ['si-email','si-pass'].forEach(id=>document.getElementById(id)?.addEventListener('keydown',e=>e.key==='Enter'&&doSignIn()));
 ['su-email','su-pass','su-name'].forEach(id=>document.getElementById(id)?.addEventListener('keydown',e=>e.key==='Enter'&&doSignUp()));
 
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+// ══ START ══
+initAuth();
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyAu7tCf90trsDSQEU6Zzf-j6_-o_QjI36g",
-    authDomain: "plotpoint-3b073.firebaseapp.com",
-    projectId: "plotpoint-3b073",
-    storageBucket: "plotpoint-3b073.firebasestorage.app",
-    messagingSenderId: "324956598171",
-    appId: "1:324956598171:web:22f05df09fba6106ce7b3e",
-    measurementId: "G-M7BELZRJLM"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  
 </script>
 </body>
 </html>
