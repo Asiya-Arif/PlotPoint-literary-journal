@@ -1,119 +1,89 @@
-# 📚 PlotPoint&
+# PlotPoint&
 
-PlotPoint& is a visual reading archive and literary journal that transforms your Goodreads library into an immersive digital experience.
+**PlotPoint&** is a visual reading archive that transforms your Goodreads library into an interactive digital bookshelf and analytics journal.
 
-By uploading your Goodreads export, you can explore your reading history through beautifully rendered bookshelves and deep analytical insights — turning raw data into a living, breathing reading story.
-
----
-
-## 🌐 Live Demo
-
-Explore PlotPoint& here:  
-https://plotpoint-dusky.vercel.app/
+Live Demo: https://plotpoint-dusky.vercel.app/
 
 ---
 
-## ✨ Overview
+## Overview
 
-PlotPoint& bridges literature and data. It allows readers to:
+PlotPoint& turns raw reading data into a narrative experience.  
+Upload your Goodreads export and explore:
 
-- Visualize their personal library
-- Analyze reading patterns and trends
-- Reflect on their literary journey
-- Experience their bookshelf through an immersive, journal-style interface
+- A dynamic visual bookshelf
+- Personalized reading analytics
+- A journal-style reading dashboard
+- Custom tagging, ratings, and notes
 
----
-
-## 📖 Features
-
-### 🗂️ Personal Stacks (Visual Library)
-
-**Dynamic Bookshelf**  
-Browse your collection on layered, visually rendered bookshelves where each book is represented by a unique spine.
-
-**Status Filtering**  
-Toggle between:
-- All
-- Read
-- Currently Reading
-- Want to Read
-
-**Search & Discovery**  
-Quickly locate specific titles using the integrated search bar.
-
-**Metadata Management**  
-Track and manage:
-- Series information
-- Genres
-- Personal ratings
-- Detailed notes
+The project focuses on combining **data visualization + literary aesthetics**.
 
 ---
 
-### 📓 The Infinite Journal
+## How It Works
 
-A data-driven journal that narrates your reading habits over time.
+1. Export your Goodreads library  
+   https://www.goodreads.com/review/import
 
-**Reading Story**  
-Transforms your reading history into an evolving narrative.
+2. Upload the CSV into PlotPoint&
 
-**Interactive Analytics**  
-Explore:
+3. The app:
+   - Parses book metadata
+   - Builds your visual library
+   - Generates reading analytics
+
+---
+
+## Features
+
+### Goodreads Import
+- Upload Goodreads CSV export
+- Automatic parsing of reading metadata
+- Local and cloud persistence
+
+### Visual Library
+- Interactive bookshelf layout
+- Filter by:
+  - Read
+  - Currently Reading
+  - Want to Read
+  - Did Not Finish
+- Editable shelf labels
+- Search and manual book additions
+
+### Book Detail System
+- Ratings (1–5 stars)
+- Custom tags
+- Notes / review editor
+- Genre + series metadata
+
+### Reading Journal Analytics
+- Reading trends visualization
 - Genre distribution
-- Reading trends
-- Top authors
-- Rating patterns
+- Progress metrics
+- Summary statistics
 
-**Immersive Interface**
-- “Book-open” layout
-- Page-flip animations
-- Decorative bookmark tracking progress
-- Literary typography-driven design
-
----
-
-### 🔗 Goodreads Integration
-
-**Easy Import**
-1. Export your Goodreads library as a `.csv` file.
-2. Drag and drop it into the app.
-
-**Automated Cataloguing**
-PlotPoint& automatically parses your export to build:
-- Your digital bookshelf
-- Your reading journal
-- Your analytics dashboard
+### Authentication & Sync
+- Email/password login
+- Google authentication
+- Firestore cloud sync
+- Local fallback storage
 
 ---
 
-## 🛠️ Technical Stack
+## Tech Stack
 
-**Frontend**  
-Built with a focus on high-fidelity typography and immersive layout design.
+**Frontend**
+- HTML5
+- TailwindCSS
+- Vanilla JavaScript
+- Chart.js
 
-- Tailwind CSS — Modern, responsive styling
-- Chart.js — Interactive data visualizations
-- HTML5 Canvas — Background particle effects
+**Backend / Cloud**
+- Firebase Authentication
+- Firebase Firestore
 
----
-
-## 🚀 Getting Started
-
-### 1️⃣ Export Goodreads Data
-- Go to your Goodreads account settings
-- Export your library as a `.csv` file
-
-### 2️⃣ Upload to PlotPoint&
-- Drag and drop your CSV into the **Connect** zone on the landing page
-
-### 3️⃣ Explore
-Once cataloguing completes:
-- Visit **Library** to explore your shelves
-- Visit **Journal** to view your reading analytics
+**Deployment**
+- Vercel
 
 ---
-
-## 🎯 Vision
-
-PlotPoint& is more than a tracker.  
-It is a reflective literary space — where data becomes memory, and memory becomes story.
