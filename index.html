@@ -101,7 +101,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(246,242,235,.97);backdrop-
 .rating-number{font-family:Inter;font-weight:800;font-size:1.2rem;color:var(--teal);}
 .shelf-key{display:flex;gap:16px;align-items:center;flex-wrap:wrap;}
 .shelf-key-item{display:flex;align-items:center;gap:6px;font-family:Inter;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal);opacity:.6;}
-.shelf-key-dot{width:9px;height:9px;border-radius:50%;}
+.shelf-key-dot{width:7px;height:7px;border-radius:50%;}
 .shelf-label-edit{border-bottom:1px dashed transparent;transition:border-color .2s,background .2s,opacity .2s;border-radius:3px;padding:1px 4px;cursor:text;outline:none;min-width:20px;}
 .shelf-label-edit:hover{border-color:rgba(27,67,50,.3);background:rgba(27,67,50,.04);opacity:1;}
 .shelf-label-edit:focus{border-color:var(--teal);background:rgba(27,67,50,.06);opacity:1;box-shadow:0 0 0 2px rgba(27,67,50,.08);}
@@ -256,11 +256,36 @@ nav{position:sticky;top:0;z-index:100;background:rgba(246,242,235,.97);backdrop-
 @keyframes syncPulse{0%,100%{opacity:1}50%{opacity:.2}}
 
 /* ═══════════════════════════════════════════
-   RESPONSIVE NAV — no hamburger
+   RESPONSIVE NAV
 ═══════════════════════════════════════════ */
 .mobile-menu-btn { display:none !important; }
 #mobile-nav { display:none !important; }
 nav .desktop-nav { display:flex !important; }
+
+/* Mobile bottom tab bar */
+#mobile-tab-bar {
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:rgba(246,242,235,.97);backdrop-filter:blur(12px);
+  border-top:1px solid rgba(27,67,50,.1);
+  padding:8px 0 max(8px, env(safe-area-inset-bottom));
+}
+#mobile-tab-bar button {
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  background:none;border:none;cursor:pointer;padding:4px 8px;
+  font-family:Inter;font-size:8px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.12em;color:var(--teal);opacity:.4;transition:opacity .2s;
+}
+#mobile-tab-bar button.active { opacity:1; }
+#mobile-tab-bar button svg { width:18px;height:18px; }
+
+@media (max-width: 640px) {
+  nav .desktop-nav { display:none !important; }
+  #mobile-tab-bar { display:flex; }
+  body { padding-bottom:64px; }
+  /* Compact nav on mobile - just logo + auth */
+  nav .max-w-7xl { padding-left:16px;padding-right:16px; }
+}
 
 /* ═══════════════════════════════════════════
    RESPONSIVE LIBRARY
@@ -481,20 +506,20 @@ nav .desktop-nav { display:flex !important; }
 <canvas id="particle-canvas"></canvas>
 
 <nav>
-  <div class="max-w-7xl mx-auto px-8 py-4 flex justify-between items-center" style="position:relative;">
+  <div class="max-w-7xl mx-auto px-8 py-4 flex justify-between items-center gap-4">
 
     <!-- Logo — left -->
     <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:1.2rem;letter-spacing:.01em;flex-shrink:0;"><span style="color:#1B4332">PlotPoint</span><span style="color:#F9C200">&amp;</span></div>
 
-    <!-- Nav links — center -->
-    <div class="flex items-center gap-10 desktop-nav" style="position:absolute;left:50%;transform:translateX(-50%);">
+    <!-- Nav links — center, hidden on mobile -->
+    <div class="flex items-center gap-10 desktop-nav">
       <button onclick="showPage('connect')" class="nav-link active" id="nav-connect">Connect</button>
       <button onclick="showPage('library')" class="nav-link" id="nav-library">Library</button>
       <button onclick="showPage('journal')" class="nav-link" id="nav-journal">Journal</button>
     </div>
 
     <!-- Auth — right -->
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-3" style="flex-shrink:0;">
       <div id="sync-dot" title="Saving…"></div>
       <button id="sign-in-btn" onclick="showAuthModal()">Sign In</button>
       <!-- When signed in: just the profile photo -->
@@ -603,25 +628,25 @@ nav .desktop-nav { display:flex !important; }
     <div class="shelf-key" style="align-items:center;gap:20px">
       <span style="font-family:Inter;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.18em;color:var(--teal);opacity:.35">Shelves</span>
       <div class="shelf-key-item" style="gap:6px">
-        <span style="font-size:13px;color:#4ADE80;line-height:1;">★</span>
+        <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#4ADE80;box-shadow:0 0 0 1.5px rgba(255,255,255,.8),0 1px 3px rgba(0,0,0,.2);flex-shrink:0;"></span>
         <span class="shelf-key-label shelf-label-edit" data-shelf-key="read" contenteditable="true" spellcheck="false" title="Click to rename"
           onblur="updateShelfLabel('read',this.textContent)"
           onkeydown="if(event.key==='Enter'){this.blur();event.preventDefault();}">Read</span>
       </div>
       <div class="shelf-key-item" style="gap:6px">
-        <span style="font-size:13px;color:#FDE047;line-height:1;">★</span>
+        <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#FDE047;box-shadow:0 0 0 1.5px rgba(255,255,255,.8),0 1px 3px rgba(0,0,0,.2);flex-shrink:0;"></span>
         <span class="shelf-key-label shelf-label-edit" data-shelf-key="currently-reading" contenteditable="true" spellcheck="false" title="Click to rename"
           onblur="updateShelfLabel('currently-reading',this.textContent)"
           onkeydown="if(event.key==='Enter'){this.blur();event.preventDefault();}">Currently Reading</span>
       </div>
       <div class="shelf-key-item" style="gap:6px">
-        <span style="font-size:13px;color:#FB7185;line-height:1;">★</span>
+        <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#FB7185;box-shadow:0 0 0 1.5px rgba(255,255,255,.8),0 1px 3px rgba(0,0,0,.2);flex-shrink:0;"></span>
         <span class="shelf-key-label shelf-label-edit" data-shelf-key="to-read" contenteditable="true" spellcheck="false" title="Click to rename"
           onblur="updateShelfLabel('to-read',this.textContent)"
           onkeydown="if(event.key==='Enter'){this.blur();event.preventDefault();}">Want to Read</span>
       </div>
       <div class="shelf-key-item" style="gap:6px">
-        <span style="font-size:13px;color:#FB923C;line-height:1;">★</span>
+        <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#FB923C;box-shadow:0 0 0 1.5px rgba(255,255,255,.8),0 1px 3px rgba(0,0,0,.2);flex-shrink:0;"></span>
         <span class="shelf-key-label shelf-label-edit" data-shelf-key="did-not-finish" contenteditable="true" spellcheck="false" title="Click to rename"
           onblur="updateShelfLabel('did-not-finish',this.textContent)"
           onkeydown="if(event.key==='Enter'){this.blur();event.preventDefault();}">Did Not Finish</span>
@@ -1450,19 +1475,18 @@ function buildShelfRow(chunk, shelfNum, root){
     titleEl.textContent=cleanTitle.slice(0,charsPerLine*Math.max(1,Math.floor(w/12)));
     spine.appendChild(titleEl);
 
-    // Status band — always visible on any spine color
+    // Status dot — small circle sticker on bottom-left of spine, like a library label
     const STATUS_META={
-      'read':              {star:'★', accent:'#4ADE80'},
-      'currently-reading': {star:'★', accent:'#FDE047'},
-      'to-read':           {star:'★', accent:'#FB7185'},
-      'did-not-finish':    {star:'★', accent:'#FB923C'},
+      'read':              {accent:'#4ADE80'},
+      'currently-reading': {accent:'#FDE047'},
+      'to-read':           {accent:'#FB7185'},
+      'did-not-finish':    {accent:'#FB923C'},
     };
-    const sm=STATUS_META[book.shelf]||{star:'★',accent:'rgba(255,255,255,.5)'};
-    const starEl=document.createElement('div');
-    const starSize=Math.max(10,Math.min(16,w*0.38));
-    starEl.style.cssText=`position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-size:${starSize}px;line-height:1;color:${sm.accent};text-shadow:-1px -1px 0 rgba(255,255,255,.9),1px -1px 0 rgba(255,255,255,.9),-1px 1px 0 rgba(255,255,255,.9),1px 1px 0 rgba(255,255,255,.9);z-index:3;pointer-events:none;`;
-    starEl.textContent='★';
-    spine.appendChild(starEl);
+    const sm=STATUS_META[book.shelf]||{accent:'rgba(255,255,255,.3)'};
+    const dotSize=Math.max(5,Math.min(7,w*0.18));
+    const dot=document.createElement('div');
+    dot.style.cssText=`position:absolute;bottom:${dotSize*0.7}px;left:50%;transform:translateX(-50%);width:${dotSize}px;height:${dotSize}px;border-radius:50%;background:${sm.accent};z-index:3;pointer-events:none;box-shadow:0 0 0 1px rgba(255,255,255,0.8),0 1px 3px rgba(0,0,0,.3);`;
+    spine.appendChild(dot);
 
     booksArea.appendChild(spine);
   });
@@ -1782,16 +1806,14 @@ function emptyState(msg){return`<p style="opacity:.35;font-style:italic;font-siz
 // ══ HERO SPINES ══
 (()=>{
   const data=[
-    {title:"The Midnight Library",color:"#7B3FE4",pages:300},
-    {title:"Educated",color:"#E8321A",pages:350},
-    {title:"Circe",color:"#00897B",pages:393},
-    {title:"Project Hail Mary",color:"#0D3B8C",pages:476},
-    {title:"Atomic Habits",color:"#F9C200",pages:320},
-    {title:"Normal People",color:"#E0407A",pages:273},
-    {title:"Pachinko",color:"#C62828",pages:485},
-    {title:"Rebecca",color:"#AD63D4",pages:449},
-    {title:"Dune",color:"#1976D2",pages:412},
-    {title:"Klara and the Sun",color:"#2E7D32",pages:307},
+    {title:"PlotPoint&",color:"#7B3FE4",pages:300},
+    {title:"Discover",color:"#E8321A",pages:350},
+    {title:"The",color:"#00897B",pages:393},
+    {title:"Patterns",color:"#0D3B8C",pages:476},
+    {title:"In",color:"#F9C200",pages:320},
+    {title:"Your",color:"#E0407A",pages:273},
+    {title:"Pages",color:"#C62828",pages:485},
+
   ];
   const strip=document.getElementById('spine-strip');
   data.forEach((b,i)=>{
@@ -2042,6 +2064,53 @@ function mobileNav(page){
 ['si-email','si-pass'].forEach(id=>document.getElementById(id)?.addEventListener('keydown',e=>e.key==='Enter'&&doSignIn()));
 ['su-email','su-pass','su-name'].forEach(id=>document.getElementById(id)?.addEventListener('keydown',e=>e.key==='Enter'&&doSignUp()));
 
+// Sync mobile tab bar active state when page changes
+const _origShowPage = showPage;
+window.showPage = function(p){
+  _origShowPage(p);
+  document.querySelectorAll('#mobile-tab-bar button').forEach(b=>b.classList.toggle('active', b.dataset.page===p));
+};
+
 </script>
+
+<!-- Mobile bottom tab bar -->
+<div id="mobile-tab-bar">
+  <button data-page="connect" class="active" onclick="showPage('connect')">
+    <!-- Link / connect icon: two chain links -->
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5"/>
+      <path stroke-linecap="round" stroke-linejoin="round" d="M10.172 13.828a4 4 0 015.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5"/>
+    </svg>
+    Connect
+  </button>
+  <button data-page="library" onclick="showPage('library')">
+    <!-- Bookshelf icon: two uprights with books resting on a plank -->
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <!-- shelf plank -->
+      <line x1="2" y1="19" x2="22" y2="19" stroke-linecap="round"/>
+      <!-- left upright -->
+      <line x1="4" y1="19" x2="4" y2="6" stroke-linecap="round"/>
+      <!-- right upright -->
+      <line x1="20" y1="19" x2="20" y2="6" stroke-linecap="round"/>
+      <!-- book 1 (tall) -->
+      <rect x="6" y="8" width="3" height="11" rx="0.5"/>
+      <!-- book 2 (short) -->
+      <rect x="10.5" y="11" width="3" height="8" rx="0.5"/>
+      <!-- book 3 (medium) -->
+      <rect x="15" y="9" width="3" height="10" rx="0.5"/>
+    </svg>
+    Library
+  </button>
+  <button data-page="journal" onclick="showPage('journal')">
+    <!-- Open book icon: two pages spread open -->
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.5C10.5 5.5 8.8 5 7 5 5.2 5 3.5 5.5 2 6.5v13c1.5-1 3.2-1.5 5-1.5 1.8 0 3.5.5 5 1.5"/>
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.5C13.5 5.5 15.2 5 17 5c1.8 0 3.5.5 5 1.5v13c-1.5-1-3.2-1.5-5-1.5-1.8 0-3.5.5-5 1.5"/>
+      <line x1="12" y1="6.5" x2="12" y2="19.5" stroke-linecap="round"/>
+    </svg>
+    Journal
+  </button>
+</div>
+
 </body>
 </html>
