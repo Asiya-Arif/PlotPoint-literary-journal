@@ -176,6 +176,8 @@ nav{position:sticky;top:0;z-index:100;background:rgba(246,242,235,.97);backdrop-
 .loading-bar-fill{height:100%;background:var(--teal);border-radius:99px;transition:width .4s;width:0%;}
 
 /* Tag pill */
+.book-spine img{opacity:0;transition:opacity .4s;width:100%;height:100%;object-fit:cover;position:absolute;inset:0;z-index:1;}
+.book-spine img.loaded{opacity:1;}
 .tag-pill{display:inline-flex;align-items:center;background:rgba(27,67,50,.08);color:var(--teal);padding:2px 8px;border-radius:4px;font-family:Inter;font-size:10px;font-weight:700;margin:2px;}
 </style>
 
@@ -274,10 +276,11 @@ nav .desktop-nav { display:flex !important; }
   flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
   background:none;border:none;cursor:pointer;padding:4px 8px;
   font-family:Inter;font-size:8px;font-weight:700;text-transform:uppercase;
-  letter-spacing:.12em;color:var(--teal);opacity:.4;transition:opacity .2s;
+  letter-spacing:.12em;color:rgba(27,67,50,.35);transition:color .2s;
 }
-#mobile-tab-bar button.active { opacity:1; }
-#mobile-tab-bar button svg { width:18px;height:18px; }
+#mobile-tab-bar button.active { color:var(--teal); }
+#mobile-tab-bar button svg { width:18px;height:18px;transition:transform .15s; }
+#mobile-tab-bar button.active svg { transform:translateY(-1px); }
 
 @media (max-width: 640px) {
   nav .desktop-nav { display:none !important; }
@@ -1239,6 +1242,7 @@ function showPage(p){
   document.getElementById('particle-canvas').style.display=c?'block':'none';
   if(p==='journal')renderJournal();
   if(p==='library'){renderLibrary();refreshShelfLabelsUI();}
+  syncTabBar(p);
 }
 
 // ══ CSV ══
@@ -1282,47 +1286,53 @@ function getOpenLibraryCover(isbn,size='M'){
 }
 
 async function fetchCover(book){
-  // Source 1: Already have ISBN — use Open Library direct
-  if(book.isbn){book.thumb=getOpenLibraryCover(book.isbn,'M');return;}
-
   const cleanT=book.title.split('(')[0].trim();
-
-  // Source 2: Google Books API — excellent cover database
+  // Google Books: fastest, best coverage
   try{
-    const q=encodeURIComponent('"'+cleanT+'" '+book.author);
-    const r=await fetch('https://www.googleapis.com/books/v1/volumes?q='+q+'&maxResults=3&fields=items(volumeInfo/imageLinks,volumeInfo/industryIdentifiers)');
+    const q=encodeURIComponent((book.isbn?'isbn:'+book.isbn:'"'+cleanT+'" '+book.author));
+    const r=await fetch('https://www.googleapis.com/books/v1/volumes?q='+q+'&maxResults=1&fields=items(volumeInfo/imageLinks,volumeInfo/industryIdentifiers)',{signal:AbortSignal.timeout(4000)});
     if(r.ok){
       const d=await r.json();
-      if(d.items?.length){
-        for(const item of d.items){
-          const imgs=item.volumeInfo?.imageLinks;
-          if(imgs){
-            const raw=imgs.extraLarge||imgs.large||imgs.medium||imgs.thumbnail||imgs.smallThumbnail||'';
-            if(raw){book.thumb=raw.replace('http://','https://').replace('zoom=1','zoom=2').replace('&edge=curl','');return;}
-          }
-          // Grab ISBN as fallback for later
-          const ids=item.volumeInfo?.industryIdentifiers||[];
-          const found=(ids.find(x=>x.type==='ISBN_13')||ids.find(x=>x.type==='ISBN_10'));
-          if(!book.isbn&&found)book.isbn=found.identifier;
+      const item=d.items?.[0];
+      if(item){
+        const imgs=item.volumeInfo?.imageLinks;
+        if(imgs){
+          const raw=imgs.medium||imgs.thumbnail||imgs.smallThumbnail||'';
+          if(raw){book.thumb=raw.replace('http://','https://').replace('zoom=1','zoom=2').replace('&edge=curl','');return;}
         }
-        // If we found an ISBN but no image, try Open Library
-        if(book.isbn){book.thumb=getOpenLibraryCover(book.isbn,'M');return;}
+        if(!book.isbn){
+          const ids=item.volumeInfo?.industryIdentifiers||[];
+          const found=ids.find(x=>x.type==='ISBN_13')||ids.find(x=>x.type==='ISBN_10');
+          if(found){book.isbn=found.identifier;book.thumb=getOpenLibraryCover(book.isbn,'M');return;}
+        }
       }
     }
   }catch(e){}
+  // Fallback: Open Library by ISBN if we have one
+  if(book.isbn){book.thumb=getOpenLibraryCover(book.isbn,'M');}
+}
 
-  // Source 3: Open Library search
-  try{
-    const q=encodeURIComponent(cleanT+' '+book.author.split(' ').pop());
-    const r=await fetch('https://openlibrary.org/search.json?q='+q+'&fields=isbn,cover_i&limit=3');
-    const d=await r.json();
-    if(d.docs?.length){
-      for(const doc of d.docs){
-        if(doc.isbn?.length){book.isbn=doc.isbn[0];book.thumb=getOpenLibraryCover(book.isbn,'M');return;}
-        if(doc.cover_i){book.thumb=`https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`;return;}
+async function fetchCoversBackground(books){
+  const BATCH=12;
+  for(let i=0;i<books.length;i+=BATCH){
+    await Promise.all(books.slice(i,i+BATCH).map(async b=>{
+      if(b.thumb)return;
+      await fetchCover(b);
+      if(!b.thumb)return;
+      // Inject cover img into the existing spine in the DOM
+      const spine=document.querySelector(`[data-book-id="${b.id}"]`);
+      if(spine&&!spine.querySelector('img')){
+        const img=document.createElement('img');
+        img.src=b.thumb;
+        img.alt='';
+        img.onload=function(){this.classList.add('loaded');};
+        img.onerror=function(){this.remove();};
+        // Insert before the dot (last child) so it sits under title+dot
+        spine.insertBefore(img,spine.querySelector('div:last-child')||null);
       }
-    }
-  }catch(e){}
+    }));
+    saveLibrary();
+  }
 }
 
 function setLoading(show,text='',pct=0){
@@ -1334,25 +1344,24 @@ async function processGoodreadsCSV(csvText){
   setLoading(true,'Parsing your export…',8);
   const rows=parseCSV(csvText);
   if(!rows.length)throw new Error('No books found in CSV');
-  setLoading(true,'Found '+rows.length+' books, mapping data…',15);
+  setLoading(true,'Found '+rows.length+' books…',40);
   const shuffled=[...SPINE_COLORS].sort(()=>Math.random()-.5);
   const mapped=rows.map((row,idx)=>{
     const shelf=row['Exclusive Shelf']||'to-read';
     const isbn=cleanISBN(row['ISBN13'])||cleanISBN(row['ISBN']);
     const title=row['Title']||'Unknown Title';
     const pageCount=parseInt(row['Number of Pages'])||0;
+    // Books with ISBN get cover URL instantly — no API call needed
     const thumb=isbn?getOpenLibraryCover(isbn,'M'):'';
     return{id:row['Book Id']||String(Date.now()+idx),title,author:row['Author']||'Unknown',pageCount,yearPublished:parseInt(row['Original Publication Year']||row['Year Published'])||null,publisher:row['Publisher']||'',binding:row['Binding']||'',isbn,myRating:parseInt(row['My Rating'])||0,avgRating:parseFloat(row['Average Rating'])||0,shelf,bookshelves:row['Bookshelves']||'',dateRead:row['Date Read']||'',dateAdded:row['Date Added']||'',userNote:(row['My Review']||'').replace(/<br\/?>/gi,'\n').replace(/<[^>]+>/g,'').trim(),genre:guessGenre(row['Title'],row['Bookshelves']),series:extractSeries(row['Title']||''),thumb,spineColor:shuffled[idx%shuffled.length],width:calcSpineWidth(title,pageCount),tags:[],fromGoodreads:true};
   });
+  // Show library immediately — don't wait for covers
+  setLoading(true,'Building your shelves…',90);
+  library=mapped;saveLibrary();journalDone=false;_ac=null;
+  setLoading(false);
+  // Fetch missing covers in background after library is visible
   const noCover=mapped.filter(b=>!b.thumb);
-  setLoading(true,'Fetching covers for '+noCover.length+' books without ISBN…',30);
-  const BATCH=4;
-  for(let i=0;i<noCover.length;i+=BATCH){
-    await Promise.all(noCover.slice(i,i+BATCH).map(b=>fetchCover(b)));
-    setLoading(true,'Searching covers… '+Math.min(i+BATCH,noCover.length)+'/'+noCover.length,Math.min(30+Math.round(((i+BATCH)/Math.max(noCover.length,1))*62),92));
-  }
-  setLoading(true,'Building your shelves…',96);
-  library=mapped;saveLibrary();journalDone=false;_ac=null;setLoading(false);
+  if(noCover.length) fetchCoversBackground(noCover);
 }
 
 function saveLibrary(){try{localStorage.setItem('pp_v8',JSON.stringify(library));}catch(e){}}
@@ -1455,6 +1464,7 @@ function buildShelfRow(chunk, shelfNum, root){
 
     const spine=document.createElement('div');
     spine.className='book-spine animate-in';
+    spine.dataset.bookId=book.id;
     spine.style.cssText=`background:${book.spineColor};height:${h}px;width:${w}px;animation-delay:${bi*22}ms;flex-shrink:0;position:relative;overflow:hidden;`;
     spine.title=book.title+' — '+book.author;
     spine.onclick=()=>openBookModal(book.id);
@@ -1475,6 +1485,16 @@ function buildShelfRow(chunk, shelfNum, root){
     titleEl.textContent=cleanTitle.slice(0,charsPerLine*Math.max(1,Math.floor(w/12)));
     spine.appendChild(titleEl);
 
+    // Cover image — fades in over spine color when loaded
+    if(book.thumb){
+      const coverImg=document.createElement('img');
+      coverImg.src=book.thumb;
+      coverImg.alt='';
+      coverImg.onload=function(){this.classList.add('loaded');};
+      coverImg.onerror=function(){this.remove();};
+      spine.appendChild(coverImg);
+    }
+
     // Status dot — small circle sticker on bottom-left of spine, like a library label
     const STATUS_META={
       'read':              {accent:'#4ADE80'},
@@ -1485,7 +1505,7 @@ function buildShelfRow(chunk, shelfNum, root){
     const sm=STATUS_META[book.shelf]||{accent:'rgba(255,255,255,.3)'};
     const dotSize=Math.max(5,Math.min(7,w*0.18));
     const dot=document.createElement('div');
-    dot.style.cssText=`position:absolute;bottom:${dotSize*0.7}px;left:50%;transform:translateX(-50%);width:${dotSize}px;height:${dotSize}px;border-radius:50%;background:${sm.accent};z-index:3;pointer-events:none;box-shadow:0 0 0 1px rgba(255,255,255,0.8),0 1px 3px rgba(0,0,0,.3);`;
+    dot.style.cssText=`position:absolute;bottom:${dotSize*0.7}px;left:50%;transform:translateX(-50%);width:${dotSize}px;height:${dotSize}px;border-radius:50%;background:${sm.accent};z-index:4;pointer-events:none;box-shadow:0 0 0 1px rgba(255,255,255,0.8),0 1px 3px rgba(0,0,0,.3);`;
     spine.appendChild(dot);
 
     booksArea.appendChild(spine);
@@ -1599,7 +1619,8 @@ function openBookModal(id){
     const img=document.createElement('img');
     img.src=book.thumb;
     img.alt=book.title;
-    img.style.cssText='width:100%;height:100%;object-fit:cover;display:block;';
+    img.style.cssText='width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .3s;';
+    img.onload=function(){this.style.opacity='1';};
     img.onerror=function(){
       this.style.display='none';
       // Try Google Books as a last-ditch attempt
@@ -2065,11 +2086,9 @@ function mobileNav(page){
 ['su-email','su-pass','su-name'].forEach(id=>document.getElementById(id)?.addEventListener('keydown',e=>e.key==='Enter'&&doSignUp()));
 
 // Sync mobile tab bar active state when page changes
-const _origShowPage = showPage;
-window.showPage = function(p){
-  _origShowPage(p);
+function syncTabBar(p){
   document.querySelectorAll('#mobile-tab-bar button').forEach(b=>b.classList.toggle('active', b.dataset.page===p));
-};
+}
 
 </script>
 
