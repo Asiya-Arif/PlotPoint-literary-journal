@@ -48,7 +48,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(246,242,235,.97);backdrop-
 .book-spine:hover{transform:translateY(-20px) !important;box-shadow:5px 18px 28px rgba(0,0,0,.28),inset 2px 0 0 rgba(255,255,255,.25);z-index:20;}
 @keyframes bookDrop{from{transform:translateY(-50px);opacity:0;}to{transform:translateY(0);opacity:1;}}
 .book-spine.animate-in{animation:bookDrop .45s cubic-bezier(.34,1.56,.64,1) both;}
-.spine-title{font-family:'Playfair Display';font-weight:700;color:rgba(255,255,255,.96);line-height:1.2;letter-spacing:.06em;overflow:hidden;position:absolute;top:0;left:0;right:0;bottom:18px;display:flex;align-items:center;justify-content:center;padding:6px 3px;text-align:center;}
+.spine-title{font-family:'Playfair Display';font-weight:700;color:rgba(255,255,255,.96);line-height:1.2;letter-spacing:.06em;overflow:hidden;position:absolute;top:0;left:0;right:0;bottom:18px;display:flex;align-items:center;justify-content:center;padding:6px 3px;text-align:center;writing-mode:vertical-rl;text-orientation:mixed;}
 
 /* ── Spine covers hidden; shown in modal only ── */
 .book-spine img{display:none !important;}
@@ -57,10 +57,25 @@ nav{position:sticky;top:0;z-index:100;background:rgba(246,242,235,.97);backdrop-
 .filter-btn.active{color:white;border-color:transparent;}
 .filter-btn:hover:not(.active){background:rgba(27,67,50,.06);}
 #filter-all.active{background:#1B4332;}
-#filter-read.active{background:#4ADE80;color:#052e16;}
-#filter-currently-reading.active{background:#FDE047;color:#422006;}
-#filter-to-read.active{background:#FB7185;color:#4c0519;}
-#filter-did-not-finish.active{background:#FB923C;color:#431407;}
+#filter-read.active{
+  background:#36cf78;
+  color:white;
+}
+
+#filter-currently-reading.active{
+  background:#fade28;
+  color:#3a2e00;
+}
+
+#filter-to-read.active{
+  background:#FF2D8F;
+  color:white;
+}
+
+#filter-did-not-finish.active{
+  background:#7B3FE4;
+  color:white;
+}
 .search-results{position:absolute;top:110%;left:0;right:0;background:white;border-radius:12px;box-shadow:0 20px 40px rgba(0,0,0,.15);max-height:380px;overflow-y:auto;display:none;z-index:200;}
 .search-item{padding:12px;display:flex;gap:12px;border-bottom:1px solid #eee;cursor:pointer;align-items:center;}
 .search-item:last-child{border-bottom:none;}.search-item:hover{background:rgba(27,67,50,.04);}
@@ -410,7 +425,7 @@ nav .desktop-nav{display:flex !important;}
 <div id="page-library" class="page-view">
   <header class="max-w-7xl mx-auto px-8 pt-16 pb-8 flex flex-col md:flex-row justify-between items-end gap-6">
     <div>
-      <h1 class="serif italic text-5xl font-bold" style="color:var(--dark-teal)">Personal Stacks</h1>
+      <h1 class="serif italic text-5xl font-bold" style="color:var(--dark-teal)">Personal Library</h1>
       <p class="sans text-xs font-bold opacity-40 mt-2 uppercase tracking-widest" id="count-label">0 Volumes</p>
     </div>
     <div class="flex flex-col gap-3 items-end">
@@ -433,10 +448,10 @@ nav .desktop-nav{display:flex !important;}
   <div class="max-w-7xl mx-auto px-8 pb-4">
     <div class="shelf-key" style="align-items:center;gap:20px">
       <span style="font-family:Inter;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.18em;color:var(--teal);opacity:.35">Shelves</span>
-      <div class="shelf-key-item" style="gap:6px"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#4ADE80;box-shadow:0 0 0 1.5px rgba(255,255,255,.8),0 1px 3px rgba(0,0,0,.2);flex-shrink:0;"></span><span class="shelf-key-label shelf-label-edit" data-shelf-key="read" contenteditable="true" spellcheck="false" title="Click to rename" onblur="updateShelfLabel('read',this.textContent)" onkeydown="if(event.key==='Enter'){this.blur();event.preventDefault();}">Read</span></div>
-      <div class="shelf-key-item" style="gap:6px"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#FDE047;box-shadow:0 0 0 1.5px rgba(255,255,255,.8),0 1px 3px rgba(0,0,0,.2);flex-shrink:0;"></span><span class="shelf-key-label shelf-label-edit" data-shelf-key="currently-reading" contenteditable="true" spellcheck="false" title="Click to rename" onblur="updateShelfLabel('currently-reading',this.textContent)" onkeydown="if(event.key==='Enter'){this.blur();event.preventDefault();}">Currently Reading</span></div>
-      <div class="shelf-key-item" style="gap:6px"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#FB7185;box-shadow:0 0 0 1.5px rgba(255,255,255,.8),0 1px 3px rgba(0,0,0,.2);flex-shrink:0;"></span><span class="shelf-key-label shelf-label-edit" data-shelf-key="to-read" contenteditable="true" spellcheck="false" title="Click to rename" onblur="updateShelfLabel('to-read',this.textContent)" onkeydown="if(event.key==='Enter'){this.blur();event.preventDefault();}">Want to Read</span></div>
-      <div class="shelf-key-item" style="gap:6px"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#FB923C;box-shadow:0 0 0 1.5px rgba(255,255,255,.8),0 1px 3px rgba(0,0,0,.2);flex-shrink:0;"></span><span class="shelf-key-label shelf-label-edit" data-shelf-key="did-not-finish" contenteditable="true" spellcheck="false" title="Click to rename" onblur="updateShelfLabel('did-not-finish',this.textContent)" onkeydown="if(event.key==='Enter'){this.blur();event.preventDefault();}">Did Not Finish</span></div>
+      <div class="shelf-key-item" style="gap:6px"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#36cf78;box-shadow:0 0 0 1.5px rgba(255,255,255,.8),0 1px 3px rgba(0,0,0,.2);flex-shrink:0;"></span><span class="shelf-key-label shelf-label-edit" data-shelf-key="read" contenteditable="true" spellcheck="false" title="Click to rename" onblur="updateShelfLabel('read',this.textContent)" onkeydown="if(event.key==='Enter'){this.blur();event.preventDefault();}">Read</span></div>
+      <div class="shelf-key-item" style="gap:6px"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#fade28;box-shadow:0 0 0 1.5px rgba(255,255,255,.8),0 1px 3px rgba(0,0,0,.2);flex-shrink:0;"></span><span class="shelf-key-label shelf-label-edit" data-shelf-key="currently-reading" contenteditable="true" spellcheck="false" title="Click to rename" onblur="updateShelfLabel('currently-reading',this.textContent)" onkeydown="if(event.key==='Enter'){this.blur();event.preventDefault();}">Currently Reading</span></div>
+      <div class="shelf-key-item" style="gap:6px"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#FF2D8F;box-shadow:0 0 0 1.5px rgba(255,255,255,.8),0 1px 3px rgba(0,0,0,.2);flex-shrink:0;"></span><span class="shelf-key-label shelf-label-edit" data-shelf-key="to-read" contenteditable="true" spellcheck="false" title="Click to rename" onblur="updateShelfLabel('to-read',this.textContent)" onkeydown="if(event.key==='Enter'){this.blur();event.preventDefault();}">Want to Read</span></div>
+      <div class="shelf-key-item" style="gap:6px"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#7B3FE4;box-shadow:0 0 0 1.5px rgba(255,255,255,.8),0 1px 3px rgba(0,0,0,.2);flex-shrink:0;"></span><span class="shelf-key-label shelf-label-edit" data-shelf-key="did-not-finish" contenteditable="true" spellcheck="false" title="Click to rename" onblur="updateShelfLabel('did-not-finish',this.textContent)" onkeydown="if(event.key==='Enter'){this.blur();event.preventDefault();}">Did Not Finish</span></div>
       <span style="font-family:Inter;font-size:8px;opacity:.28;color:var(--teal);letter-spacing:.05em">✎ click to rename</span>
     </div>
   </div>
@@ -1261,7 +1276,12 @@ function buildShelfRow(chunk,shelfNum,root){
     // No cover images on spines — covers shown only in the modal
 
     // Status dot
-    const STATUS_META={'read':{accent:'#4ADE80'},'currently-reading':{accent:'#FDE047'},'to-read':{accent:'#FB7185'},'did-not-finish':{accent:'#FB923C'}};
+    const STATUS_META={
+  'read':{accent:'#36cf78'},
+  'currently-reading':{accent:'#fade28'},
+  'to-read':{accent:'#FF2D8F'},
+  'did-not-finish':{accent:'#7B3FE4'}
+};
     const sm=STATUS_META[book.shelf]||{accent:'rgba(255,255,255,.3)'};
     const dotSize=Math.max(5,Math.min(7,w*0.18));
     const dot=document.createElement('div');
@@ -1390,7 +1410,12 @@ function openBookModal(id){
   const shelfLabel=document.createElement('div');shelfLabel.style.cssText='font-family:Inter;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.18em;opacity:.3;text-align:center;margin-bottom:8px;';
   shelfLabel.textContent='Reading Status';shelfWrap.appendChild(shelfLabel);
   const shelfPicker=document.createElement('div');shelfPicker.id='modal-shelf-picker';shelfPicker.style.cssText='display:flex;gap:6px;justify-content:center;flex-wrap:wrap;';
-  const SHELF_OPTS=[{key:'read',label:'★ Read',color:'#16a34a',bg:'#dcfce7'},{key:'currently-reading',label:'★ Reading',color:'#ca8a04',bg:'#fef9c3'},{key:'to-read',label:'★ Want to Read',color:'#e11d48',bg:'#ffe4e6'},{key:'did-not-finish',label:'★ Did Not Finish',color:'#ea580c',bg:'#ffedd5'}];
+  const SHELF_OPTS = [
+  { key: 'read', label: '★ Read', color: '#36cf78', bg: '#e6fff2' },
+  { key: 'currently-reading', label: '★ Reading', color: '#fade28', bg: '#fffbd6' },
+  { key: 'to-read', label: '★ Want to Read', color: '#FF2D8F', bg: '#ffe4f2' },
+  { key: 'did-not-finish', label: '★ Did Not Finish', color: '#7B3FE4', bg: '#efe7ff' }
+];
   SHELF_OPTS.forEach(opt=>{
     const btn=document.createElement('button');btn.dataset.shelfKey=opt.key;
     const isActive=book.shelf===opt.key;
