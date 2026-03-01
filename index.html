@@ -564,14 +564,54 @@ function refreshShelfLabelsUI(){
   if(document.getElementById('page-journal').classList.contains('active')){_ac=null;journalDone=false;}
 }
 
-const GENRE_MOOD={'fantasy':[95,30,75,80,60],'science fiction':[50,40,50,70,95],'sci-fi':[50,40,50,70,95],'mystery':[70,25,60,85,75],'thriller':[65,20,55,90,70],'romance':[60,85,90,30,40],'literary fiction':[80,35,85,55,90],'fiction':[75,50,70,50,65],'history':[55,30,50,40,90],'biography':[50,40,70,35,85],'self-help':[30,70,55,20,80],'horror':[75,10,40,95,50],'young adult':[65,75,80,45,50],'classics':[70,40,80,60,95],'graphic novel':[60,65,65,45,55]};
+// GENRE_MOOD: keys are genre-key slugs (matching GENRE_LABELS keys)
+// Values: [Atmospheric, Lighthearted, Emotional, Dark, Intellectual] 0-100
+const GENRE_MOOD={
+  'epic-fantasy':[98,20,80,85,65],'dark-fantasy':[92,10,72,97,60],'urban-fantasy':[85,40,72,75,55],
+  'romantic-fantasy':[80,65,85,60,50],'cozy-fantasy':[75,80,70,30,50],
+  'high-fantasy':[95,25,75,80,65],'grimdark':[88,5,65,98,55],'fantasy':[90,35,75,78,60],
+  'science-fiction':[50,40,50,68,95],'space-opera':[62,50,55,68,88],
+  'cyberpunk':[45,25,48,82,95],'dystopian':[68,8,65,92,85],
+  'post-apocalyptic':[62,8,60,95,70],'hard-sf':[38,28,42,62,100],
+  'military-sf':[55,25,52,80,78],'steampunk':[70,50,55,60,82],'biopunk':[45,20,48,75,90],
+  'paranormal-romance':[72,72,90,38,40],'contemporary-romance':[55,90,92,15,35],
+  'historical-romance':[65,78,88,28,55],'romantic-suspense':[65,55,80,65,50],'romance':[60,85,90,30,40],
+  'mystery':[68,22,58,85,78],'cozy-mystery':[58,60,55,45,70],
+  'detective':[65,20,52,80,82],'police-procedural':[60,18,50,82,80],'noir':[72,8,55,92,75],
+  'legal-thriller':[55,20,52,78,80],'psychological-thriller':[62,12,58,95,80],
+  'thriller':[62,18,52,88,72],'spy-fiction':[60,30,50,78,75],
+  'horror':[78,8,42,98,52],'gothic':[82,12,65,90,75],'supernatural':[78,25,62,85,55],
+  'paranormal':[75,30,65,80,52],'cosmic-horror':[88,5,55,99,70],
+  'historical-fiction':[75,35,75,52,85],'alternate-history':[68,30,62,55,88],
+  'literary-fiction':[80,35,85,55,92],'coming-of-age':[65,62,85,45,62],
+  'magical-realism':[82,45,80,55,78],'womens-fiction':[62,75,85,32,62],
+  'chick-lit':[52,88,82,18,45],'new-adult':[62,68,82,42,52],
+  'young-adult':[65,72,80,48,52],'middle-grade':[50,88,72,28,45],'childrens':[42,95,68,18,38],
+  'adventure':[72,62,58,55,60],'western':[62,42,52,62,55],'war-fiction':[58,12,65,88,80],
+  'satire':[55,68,55,40,82],'humour':[38,96,58,10,45],
+  'science-fantasy':[80,40,62,68,80],'mythology':[88,38,72,65,78],
+  'fairy-tale':[82,72,75,48,60],'graphic-novel':[62,62,65,48,58],
+  'manga':[65,68,70,50,52],'short-stories':[72,52,70,55,68],
+  'novella':[70,52,70,52,65],'classics':[72,40,80,60,95],'drama':[75,42,82,60,78],
+  'poetry':[82,50,88,55,80],
+  'biography':[52,38,70,35,85],'autobiography':[52,38,75,35,85],'memoir':[55,42,82,40,85],
+  'true-crime':[50,18,45,88,78],'history':[55,30,50,42,90],
+  'politics':[38,18,48,55,88],'philosophy':[38,32,55,50,95],
+  'psychology':[42,38,60,48,90],'popular-science':[35,45,45,30,95],
+  'economics':[25,38,35,30,85],'business':[22,48,32,18,80],
+  'technology':[28,38,32,32,90],'self-help':[28,68,55,18,80],
+  'travel':[58,72,60,28,65],'food-cooking':[38,82,58,12,60],
+  'art':[70,52,65,40,78],'music':[68,62,72,38,72],
+  'religion':[52,55,68,38,75],'health':[28,55,48,25,78],
+  'nature':[70,62,58,35,80],'education':[28,50,42,20,80],'essays':[62,42,65,45,82],
+};
 
 const TOTAL_SPREADS=8;
 const SPREAD_META=[
   {left:{ch:'I · Overview',n:'1'},right:{ch:'II · Shelves & Ratings',n:'2'},label:'Overview & Shelves'},
   {left:{ch:'III · Hall of Fame',n:'3'},right:{ch:'IV · Genres',n:'4'},label:'Top Books & Genres'},
   {left:{ch:'V · Authors',n:'5'},right:{ch:'VI · Series',n:'6'},label:'Authors & Series'},
-  {left:{ch:'VII · Vibes',n:'7'},right:{ch:'VIII · Bookweight',n:'8'},label:'Moods & Length'},
+  {left:{ch:'VII · Vibes',n:'7'},right:{ch:'VIII · Personality Match',n:'8'},label:'Moods & Personality Match'},
   {left:{ch:'IX · Taste Profile',n:'9'},right:{ch:'X · The Pile',n:'10'},label:'Contrarian & TBR'},
   {left:{ch:'XI · Velocity',n:'11'},right:{ch:'XII · Eras',n:'12'},label:'Timeline & Eras'},
   {left:{ch:'XIII · Your Tags',n:'13'},right:{ch:'XIV · Tag Insights',n:'14'},label:'Tag Analytics'},
@@ -607,7 +647,7 @@ function refreshChartsForSpread(s){
   setTimeout(()=>{
     if(s===0){dc('c-shelf');dc('c-ratings');renderShelfCharts();}
     if(s===1){dc('c-genres');renderGenreChart();}
-    if(s===3){dc('c-mood');dc('c-pages-dist');renderMoodAndLength();}
+    if(s===3){dc('c-mood');renderMoodAndLength();}
     if(s===5){dc('c-timeline');dc('c-decades');renderTimeCharts();}
     if(s===6){dc('c-tags');dc('c-tag-ratings');renderTagCharts();}
     if(s===7){dc('c-dnf-genres');renderDNFCharts();}
@@ -658,7 +698,7 @@ function getAnalytics(){
   const dnf=library.filter(b=>b.shelf==='did-not-finish');
   const avgR=rated.length?(rated.reduce((s,b)=>s+b.myRating,0)/rated.length).toFixed(2):'0';
   const totalPages=read.reduce((s,b)=>s+(b.pageCount||0),0);
-  const gCount={};library.forEach(b=>{const g=b.genre||'Fiction';gCount[g]=(gCount[g]||0)+1;});
+  const gCount={};library.forEach(b=>{const g=normaliseGenreLabel(b.genre)||'Literary Fiction';gCount[g]=(gCount[g]||0)+1;});
   const topGenres=Object.entries(gCount).sort((a,b)=>b[1]-a[1]);
   const topGenre=topGenres[0]?.[0]||'Fiction';
   const aC={};library.forEach(b=>{aC[b.author]=(aC[b.author]||0)+1;});
@@ -731,16 +771,70 @@ function buildAuthorsRated(rated){
   return aAvg.map(({author,avg,count},i)=>`<div><div style="display:flex;justify-content:space-between;font-family:Inter;font-size:10px;font-weight:700;margin-bottom:4px"><span>${author}</span><span style="color:var(--mustard)">${avg}★</span></div><div class="j-bar-track"><div class="j-bar-fill" style="width:${Math.round(parseFloat(avg)/5*100)}%;background:${PALETTE[i%PALETTE.length]}"></div></div></div>`).join('')||'<p style="opacity:.35;font-style:italic;font-size:.8rem">Rate 2+ books per author to see this.</p>';
 }
 function buildSpread3(lb,rb){
-  lb.innerHTML=`<h2 class="j-section-title">Reading Moods</h2><div class="j-card" style="margin-bottom:12px"><div style="height:215px"><canvas id="c-mood"></canvas></div></div><div id="j-mood-notes" style="display:flex;flex-direction:column;gap:8px"></div>`;
-  const {read,longestRead,shortestRead,avgPages}=getAnalytics();
-  const lB={'< 200p':0,'200–350p':0,'350–500p':0,'500–700p':0,'700+p':0};
-  read.filter(b=>b.pageCount>0).forEach(b=>{const p=b.pageCount;if(p<200)lB['< 200p']++;else if(p<350)lB['200–350p']++;else if(p<500)lB['350–500p']++;else if(p<700)lB['500–700p']++;else lB['700+p']++;});
-  const topBucket=Object.entries(lB).sort((a,b)=>b[1]-a[1])[0];
-  rb.innerHTML=`<h2 class="j-section-title">Book Length Preferences</h2>
-  <div class="j-card" style="margin-bottom:12px"><div style="height:170px"><canvas id="c-pages-dist"></canvas></div></div>
-  <div style="display:flex;flex-direction:column;gap:9px">
-    ${[{l:'Preferred Length',v:topBucket?topBucket[0]:'—'},{l:'Longest Read',v:longestRead?longestRead.pageCount+'p':'—',s:longestRead?.title?.slice(0,24)},{l:'Shortest Read',v:shortestRead?shortestRead.pageCount+'p':'—',s:shortestRead?.title?.slice(0,24)},{l:'Avg Length',v:avgPages?avgPages+'p':'—'}].map(x=>`<div class="j-stat" style="padding:10px 13px"><span class="j-stat-label">${x.l}</span><div style="font-family:'Playfair Display';font-size:1.2rem;font-weight:700;color:var(--teal)">${x.v}</div>${x.s?`<div class="j-stat-sub">${x.s}</div>`:''}</div>`).join('')}
-  </div>`;
+  lb.innerHTML=`<h2 class="j-section-title">Reading Moods</h2>
+  <p style="font-family:Inter;font-size:7.5px;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:var(--mustard);margin-bottom:10px">Green = Weighted by your ratings · Orange dashed = Unweighted baseline</p>
+  <div class="j-card" style="margin-bottom:12px"><div style="height:200px"><canvas id="c-mood"></canvas></div></div>
+  <div id="j-mood-notes" style="display:flex;flex-direction:column;gap:8px"></div>`;
+
+  const ac=getAnalytics();
+  const allTbr=library.filter(b=>b.shelf==='to-read');
+
+  // Last 5 recently-added TBR books
+  const last5=allTbr.slice(-5).reverse();
+
+  // Best match from the ENTIRE TBR shelf (may differ from last 5)
+  const allScored=allTbr.map(b=>({...b,matchScore:calcPersonalityMatch(b,ac),...getMatchLabel(calcPersonalityMatch(b,ac))}));
+  const bestOverall=allScored.sort((a,b)=>b.matchScore-a.matchScore)[0];
+
+  // Score the last 5 (for display order, show by score)
+  const last5Scored=last5.map(b=>{
+    const s=calcPersonalityMatch(b,ac);
+    return{...b,matchScore:s,...getMatchLabel(s)};
+  }).sort((a,b)=>b.matchScore-a.matchScore);
+
+  // Is the best overall already in last 5?
+  const bestIsInLast5=last5Scored.some(b=>b.id===bestOverall?.id);
+
+  const emptyMsg='<p style="opacity:.4;font-style:italic;font-family:Lora;font-size:.88rem;padding:20px 0">Add books to your "Want to Read" shelf to see personality match suggestions here.</p>';
+
+  const renderCard=(b,badge)=>{
+    const bar=b.matchScore;
+    const coverEl=b.thumb
+      ?`<div style="width:32px;height:46px;border-radius:3px;flex-shrink:0;overflow:hidden;box-shadow:2px 3px 7px rgba(0,0,0,.22);background:${b.spineColor}"><img src="${b.thumb}" alt="" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none'"></div>`
+      :`<div style="width:32px;height:46px;border-radius:3px;flex-shrink:0;box-shadow:2px 3px 7px rgba(0,0,0,.18);background:${b.spineColor}"></div>`;
+    return`<div style="display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:8px;border:1px solid ${badge?'rgba(249,194,0,.35)':'rgba(27,67,50,.07)'};background:${badge?'rgba(249,194,0,.04)':'rgba(255,255,255,.5)'}">
+      ${coverEl}
+      <div style="flex:1;min-width:0">
+        <div style="font-family:'Playfair Display';font-size:.78rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.2;margin-bottom:1px">
+          ${b.title.split('(')[0].trim()}${badge?` <span style="font-family:Inter;font-size:6.5px;font-weight:800;color:var(--mustard)">✶</span>`:''}
+        </div>
+        <div style="font-family:Inter;font-size:7.5px;opacity:.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:4px">${b.author}${b.genre?' · '+b.genre:''}</div>
+        <div style="display:flex;align-items:center;gap:5px">
+          <div style="flex:1;height:4px;background:rgba(0,0,0,.08);border-radius:99px;overflow:hidden">
+            <div style="height:100%;width:${bar}%;background:${b.col};border-radius:99px;transition:width .5s"></div>
+          </div>
+          <span style="font-family:Inter;font-size:8px;font-weight:800;color:${b.col};flex-shrink:0;min-width:22px;text-align:right">${bar}</span>
+          <span style="font-family:Inter;font-size:7px;font-weight:700;color:${b.col};background:${b.col}18;padding:2px 6px;border-radius:99px;flex-shrink:0;white-space:nowrap;letter-spacing:.02em">${b.lbl}</span>
+        </div>
+      </div>
+    </div>`;
+  };
+
+  const showBest=bestOverall&&allTbr.length>0;
+  rb.innerHTML=`<h2 class="j-section-title" style="margin-bottom:6px">Book Personality Match</h2>
+  <p style="font-family:Inter;font-size:7.5px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--mustard);opacity:.65;margin-bottom:9px">Genre affinity · Mood · Author history · Crowd rating</p>
+  ${!allTbr.length?emptyMsg:`
+  ${showBest?`
+    <p style="font-family:Inter;font-size:7.5px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--mustard);margin-bottom:5px">Best match from your whole TBR</p>
+    ${renderCard(bestOverall,true)}
+    <div style="height:1px;background:rgba(27,67,50,.07);margin:8px 0"></div>
+  `:''}
+  <p style="font-family:Inter;font-size:7.5px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--teal);opacity:.7;margin-bottom:5px">5 most recently added</p>
+  <div style="display:flex;flex-direction:column;gap:5px">
+    ${last5Scored.slice(0,5).map(b=>renderCard(b,false)).join('')}
+  </div>
+  <p style="font-family:Inter;font-size:7px;opacity:.25;text-align:center;margin-top:8px;letter-spacing:.05em">affinity 40% · mood 25% · crowd 20% · author 15%</p>
+  `}`;
   renderMoodAndLength();
 }
 function buildSpread4(lb,rb){
@@ -846,19 +940,166 @@ function renderGenreChart(){
   try{new Chart(document.getElementById('c-genres'),{type:'bar',data:{labels:gL,datasets:[{data:gD,backgroundColor:PALETTE.slice(0,gL.length),borderRadius:4}]},options:{...CFG,indexAxis:'y',scales:{x:{display:false},y:{grid:{display:false},ticks:{font:{family:'Inter',size:8},color:'rgba(42,34,24,.7)'}}}}});}catch(e){}
 }
 function renderMoodAndLength(){
-  const mS=[0,0,0,0,0];let mc=0;
-  library.forEach(b=>{const k=(b.genre||'').toLowerCase();for(const[gk,mv]of Object.entries(GENRE_MOOD)){if(k.includes(gk)){mv.forEach((m,i)=>mS[i]+=m);mc++;break;}}});
-  const mD=mc?mS.map(v=>Math.round(v/mc)):[50,50,50,50,50];
   const mL=['Atmospheric','Lighthearted','Emotional','Dark','Intellectual'];
-  try{new Chart(document.getElementById('c-mood'),{type:'radar',data:{labels:mL,datasets:[{data:mD,borderColor:'#1B4332',backgroundColor:'rgba(27,67,50,.12)',pointRadius:3,pointBackgroundColor:'#1B4332'}]},options:{...CFG,scales:{r:{ticks:{display:false},grid:{color:'rgba(0,0,0,.05)'},pointLabels:{font:{family:'Inter',size:8},color:'rgba(42,34,24,.6)'}}}}});}catch(e){}
+  const mS=[0,0,0,0,0];let mW=0;
+  const mSraw=[0,0,0,0,0];let mC=0;
+
+  // Match book genre label → GENRE_MOOD entry via canonical key lookup
+  function getMoodVec(genreLabel){
+    if(!genreLabel)return null;
+    const gl=normaliseGenreText(genreLabel);
+    // Match against GENRE_LABELS values → get key → look up GENRE_MOOD
+    for(const[key,lbl]of Object.entries(GENRE_LABELS)){
+      if(normaliseGenreText(lbl)===gl&&GENRE_MOOD[key])return GENRE_MOOD[key];
+    }
+    // Fuzzy: check if normalised GENRE_MOOD key appears in genre string
+    for(const[key,mv]of Object.entries(GENRE_MOOD)){
+      const kn=normStr(key.replace(/-/g,' '));
+      if(kn.length>3&&gl.includes(kn))return mv;
+    }
+    return null;
+  }
+
+  library.forEach(b=>{
+    const mv=getMoodVec(b.genre);
+    if(mv){
+      const w=b.myRating>0?b.myRating/5:0.5;
+      mv.forEach((m,i)=>{mS[i]+=m*w;mSraw[i]+=m;});
+      mW+=w;mC++;
+    }
+  });
+
+  const mD  =mW>0?mS.map(v=>Math.round(v/mW)):[50,50,50,50,50];
+  const mDraw=mC>0?mSraw.map(v=>Math.round(v/mC)):[50,50,50,50,50];
   const topMood=mL[mD.indexOf(Math.max(...mD))];
-  const mDesc={Atmospheric:'You love worlds to get lost in.',Lighthearted:'You seek joy and levity.',Emotional:'You read to feel deeply.',Dark:'You lean into the shadows.',Intellectual:'You read to think and grow.'};
+  const mDesc={Atmospheric:'You love immersive worlds.',Lighthearted:'You seek joy and levity.',
+    Emotional:'You read to feel deeply.',Dark:'You lean into the shadows.',Intellectual:'You read to think and grow.'};
+
+  const canvas=document.getElementById('c-mood');
+  if(!canvas)return;
+  const existing=Chart.getChart(canvas);if(existing)existing.destroy();
+
+  new Chart(canvas,{
+    type:'radar',
+    data:{labels:mL,datasets:[
+      {label:'Weighted by Rating',data:mD,
+       borderColor:'#1B4332',backgroundColor:'rgba(27,67,50,.18)',
+       pointRadius:5,pointBackgroundColor:'#1B4332',pointBorderColor:'white',pointBorderWidth:1.5,borderWidth:2.5,fill:true},
+      {label:'Unweighted Baseline',data:mDraw,
+       borderColor:'#C2410C',backgroundColor:'rgba(194,65,12,.08)',
+       pointRadius:4,pointBackgroundColor:'#C2410C',pointBorderColor:'white',pointBorderWidth:1,
+       borderWidth:2,fill:true,
+       // Dashed line for radar in Chart.js v4 — use segment callback
+       segment:{borderDash:[6,4]}}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,animation:{duration:400},
+      plugins:{
+        legend:{display:true,position:'bottom',
+          labels:{font:{family:'Inter',size:8},color:'rgba(42,34,24,.65)',padding:12,
+                  boxWidth:16,usePointStyle:true,pointStyleWidth:16}},
+        tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.raw}`}}
+      },
+      scales:{r:{min:0,max:100,
+        ticks:{stepSize:25,font:{family:'Inter',size:7},color:'rgba(0,0,0,.3)',backdropColor:'transparent'},
+        grid:{color:'rgba(0,0,0,.07)'},angleLines:{color:'rgba(0,0,0,.07)'},
+        pointLabels:{font:{family:'Inter',size:8.5,weight:'600'},color:'rgba(42,34,24,.7)'}
+      }}
+    }
+  });
+
   const mn=document.getElementById('j-mood-notes');
-  if(mn)mn.innerHTML=mL.map((lbl,i)=>`<div><div style="display:flex;justify-content:space-between;font-family:Inter;font-size:9px;font-weight:700;margin-bottom:3px"><span style="color:var(--teal)${lbl===topMood?';font-weight:800':''}">${lbl}${lbl===topMood?' ◀':''}</span><span style="color:var(--mustard)">${mD[i]}%</span></div><div class="j-bar-track"><div class="j-bar-fill" style="width:${mD[i]}%;background:${PALETTE[i%PALETTE.length]}"></div></div>${lbl===topMood?`<p style="font-family:Lora;font-style:italic;font-size:10px;opacity:.5;margin-top:3px">${mDesc[lbl]}</p>`:''}</div>`).join('');
-  const {read}=getAnalytics();
-  const lB={'< 200p':0,'200–350p':0,'350–500p':0,'500–700p':0,'700+p':0};
-  read.filter(b=>b.pageCount>0).forEach(b=>{const p=b.pageCount;if(p<200)lB['< 200p']++;else if(p<350)lB['200–350p']++;else if(p<500)lB['350–500p']++;else if(p<700)lB['500–700p']++;else lB['700+p']++;});
-  try{new Chart(document.getElementById('c-pages-dist'),{type:'bar',data:{labels:Object.keys(lB),datasets:[{data:Object.values(lB),backgroundColor:PALETTE.slice(0,5),borderRadius:4}]},options:{...CFG,scales:{y:{display:false},x:{grid:{display:false},ticks:{font:{family:'Inter',size:8}}}}}});}catch(e){}
+  if(mn)mn.innerHTML=
+    `<div class="j-annotation" style="margin-bottom:10px"><strong>${topMood}</strong> is your dominant reading mood — ${mDesc[topMood]}</div>`
+    +mL.map((lbl,i)=>{
+      const delta=mD[i]-mDraw[i],dSign=delta>0?'+':'';
+      return`<div><div style="display:flex;justify-content:space-between;align-items:center;font-family:Inter;font-size:9px;font-weight:700;margin-bottom:3px">
+        <span style="color:var(--teal)${lbl===topMood?';font-weight:900':''}">${lbl}${lbl===topMood?' ◀':''}</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          ${delta!==0?`<span style="font-size:7.5px;color:${delta>0?'var(--teal)':'var(--rose)'};opacity:.7">${dSign}${delta} vs baseline</span>`:''}
+          <span style="color:var(--mustard)">${mD[i]}</span>
+        </div>
+      </div><div class="j-bar-track"><div class="j-bar-fill" style="width:${mD[i]}%;background:${PALETTE[i%PALETTE.length]}"></div></div></div>`;
+    }).join('');
+}
+
+// ── Compute Book Personality Match Score for a TBR book vs user's taste profile ──
+function calcPersonalityMatch(book,analytics){
+  const {read,rated,topGenres,avgR}=analytics;
+  if(read.length===0)return 50;
+  let score=0;let factors=0;
+
+  // 1. Genre affinity (40 pts): how often user reads & rates this genre highly
+  const g=(book.genre||'').toLowerCase();
+  const totalBooks=library.length||1;
+  let genreScore=0;
+  for(const[gk]of Object.entries(GENRE_MOOD)){
+    if(g.includes(gk)){
+      // frequency score
+      const genreCount=library.filter(b=>(b.genre||'').toLowerCase().includes(gk)).length;
+      const freq=Math.min(genreCount/totalBooks,1)*50;
+      // rating score within genre
+      const gRated=rated.filter(b=>(b.genre||'').toLowerCase().includes(gk));
+      const gAvg=gRated.length?(gRated.reduce((s,b)=>s+b.myRating,0)/gRated.length):parseFloat(avgR)||3;
+      const ratingBonus=(gAvg/5)*50;
+      genreScore=freq+ratingBonus;
+      break;
+    }
+  }
+  score+=genreScore*0.4;factors+=40;
+
+  // 2. Crowd vs personal taste alignment (20 pts): user's avgR vs global avg
+  const userAvg=parseFloat(avgR)||3;
+  const bookAvg=book.avgRating||3;
+  // If user rates higher than average, they're generous → slight boost
+  // Reward books that score above user's typical threshold
+  const alignScore=Math.max(0,Math.min(100,(bookAvg/5)*80+(userAvg>3.5?15:0)));
+  score+=alignScore*0.2;factors+=20;
+
+  // 3. Mood vector similarity (25 pts): cosine similarity using normalised genre keys
+  function getMV(gl){
+    if(!gl)return null;
+    const gn=normaliseGenreText(gl);
+    for(const[key,lbl]of Object.entries(GENRE_LABELS)){if(normaliseGenreText(lbl)===gn&&GENRE_MOOD[key])return GENRE_MOOD[key];}
+    for(const[key,mv]of Object.entries(GENRE_MOOD)){const kn=normStr(key.replace(/-/g,' '));if(kn.length>3&&gn.includes(kn))return mv;}
+    return null;
+  }
+  const mS=[0,0,0,0,0];let mW=0;
+  library.filter(b=>b.shelf==='read').forEach(b=>{
+    const mv=getMV(b.genre);
+    if(mv){const w=b.myRating>0?b.myRating/5:0.5;mv.forEach((m,i)=>mS[i]+=m*w);mW+=w;}
+  });
+  const userMood=mW>0?mS.map(v=>v/mW):[50,50,50,50,50];
+  const bookMood=getMV(book.genre)||[50,50,50,50,50];
+  // cosine similarity
+  const dot=userMood.reduce((s,v,i)=>s+v*bookMood[i],0);
+  const magU=Math.sqrt(userMood.reduce((s,v)=>s+v*v,0))||1;
+  const magB=Math.sqrt(bookMood.reduce((s,v)=>s+v*v,0))||1;
+  const cosine=dot/(magU*magB);
+  score+=cosine*100*0.25;factors+=25;
+
+  // 4. Author familiarity bonus (15 pts): user has read this author before
+  const authorBooks=library.filter(b=>b.author===book.author&&b.shelf==='read');
+  const authorRated=authorBooks.filter(b=>b.myRating>0);
+  let authorScore=0;
+  if(authorBooks.length>0){
+    authorScore=Math.min(60,authorBooks.length*20);
+    if(authorRated.length>0){
+      const aAvg=authorRated.reduce((s,b)=>s+b.myRating,0)/authorRated.length;
+      authorScore+=aAvg/5*40;
+    }
+  }
+  score+=authorScore*0.15;factors+=15;
+
+  // Normalize to 0–100
+  return Math.min(100,Math.max(0,Math.round(score/(factors/100))));
+}
+
+function getMatchLabel(score){
+  if(score>=85)return{lbl:'Excellent Match',col:'#1B4332'};
+  if(score>=70)return{lbl:'Strong Match',col:'#00897B'};
+  if(score>=55)return{lbl:'Good Match',col:'#F9C200'};
+  if(score>=40)return{lbl:'Possible Match',col:'#E8321A'};
+  return{lbl:'Outside Your Zone',col:'#7B3FE4'};
 }
 function renderTimeCharts(){
   const byYear={};library.forEach(b=>{const y=(b.dateRead||b.dateAdded||'').slice(0,4);if(y&&/^\d{4}$/.test(y))byYear[y]=(byYear[y]||0)+1;});
@@ -915,13 +1156,248 @@ function parseCSV(text){
   return rows.slice(1).map(cells=>{const o={};h.forEach((k,i)=>{o[k]=(cells[i]||'').replace(/^=?"?|"?$/g,'').trim();});return o;});
 }
 function cleanISBN(v){return(v||'').replace(/[^0-9X]/gi,'');}
-function guessGenre(title,shelves){
-  const s=((title||'')+' '+(shelves||'')).toLowerCase();
-  const map=[['fantasy','Fantasy'],['romance','Romance'],['mystery','Mystery'],['thriller','Thriller'],['sci-fi','Sci-Fi'],['science fiction','Sci-Fi'],['horror','Horror'],['biography','Biography'],['history','History'],['self-help','Self-Help'],['literary','Literary Fiction'],['classic','Classics'],['young adult','Young Adult'],['graphic','Graphic Novel']];
-  for(const[k,v]of map)if(s.includes(k))return v;
-  return'Fiction';
+
+// ══ GENRE ENGINE ═══════════════════════════════════════════
+// Normalise: lowercase, collapse dashes/underscores/extra spaces
+function normStr(s){return(s||'').toLowerCase().replace(/[-_–—]/g,' ').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();}
+
+// Single source of truth for genre display labels
+const GENRE_LABELS={
+  'epic-fantasy':'Epic Fantasy','dark-fantasy':'Dark Fantasy','urban-fantasy':'Urban Fantasy',
+  'romantic-fantasy':'Romantic Fantasy','cozy-fantasy':'Cozy Fantasy',
+  'high-fantasy':'High Fantasy','grimdark':'Grimdark','fantasy':'Fantasy',
+  'science-fiction':'Science Fiction','space-opera':'Space Opera','cyberpunk':'Cyberpunk',
+  'dystopian':'Dystopian','post-apocalyptic':'Post-Apocalyptic',
+  'hard-sf':'Hard Science Fiction','military-sf':'Military Science Fiction',
+  'steampunk':'Steampunk','biopunk':'Biopunk',
+  'paranormal-romance':'Paranormal Romance','contemporary-romance':'Contemporary Romance',
+  'historical-romance':'Historical Romance','romantic-suspense':'Romantic Suspense','romance':'Romance',
+  'mystery':'Mystery','cozy-mystery':'Cozy Mystery','detective':'Detective Fiction',
+  'police-procedural':'Police Procedural','noir':'Noir',
+  'legal-thriller':'Legal Thriller','psychological-thriller':'Psychological Thriller',
+  'thriller':'Thriller','spy-fiction':'Spy Fiction',
+  'horror':'Horror','gothic':'Gothic Fiction','supernatural':'Supernatural Fiction',
+  'paranormal':'Paranormal Fiction','cosmic-horror':'Cosmic Horror',
+  'historical-fiction':'Historical Fiction','alternate-history':'Alternate History',
+  'literary-fiction':'Literary Fiction','coming-of-age':'Coming-of-Age',
+  'magical-realism':'Magical Realism','womens-fiction':"Women's Fiction",
+  'chick-lit':'Chick Lit','new-adult':'New Adult','young-adult':'Young Adult',
+  'middle-grade':'Middle Grade','childrens':"Children's",
+  'adventure':'Adventure','western':'Western','war-fiction':'War Fiction',
+  'satire':'Satire','humour':'Humour','science-fantasy':'Science Fantasy',
+  'mythology':'Mythology & Folklore','fairy-tale':'Fairy Tale',
+  'graphic-novel':'Graphic Novel','manga':'Manga','short-stories':'Short Stories',
+  'novella':'Novella','classics':'Classics','drama':'Drama','poetry':'Poetry',
+  'biography':'Biography','autobiography':'Autobiography','memoir':'Memoir',
+  'true-crime':'True Crime','history':'History','politics':'Politics',
+  'philosophy':'Philosophy','psychology':'Psychology','popular-science':'Popular Science',
+  'economics':'Economics','business':'Business','technology':'Technology',
+  'self-help':'Self-Help','travel':'Travel','food-cooking':'Food & Cooking',
+  'art':'Art','music':'Music','religion':'Religion & Spirituality',
+  'health':'Health & Medicine','nature':'Nature','education':'Education',
+  'essays':'Essays',
+};
+
+// Fiction=true, Non-Fiction=false per genre key
+const GENRE_IS_FICTION={
+  'epic-fantasy':true,'dark-fantasy':true,'urban-fantasy':true,'romantic-fantasy':true,
+  'cozy-fantasy':true,'high-fantasy':true,'grimdark':true,'fantasy':true,
+  'science-fiction':true,'space-opera':true,'cyberpunk':true,'dystopian':true,
+  'post-apocalyptic':true,'hard-sf':true,'military-sf':true,'steampunk':true,'biopunk':true,
+  'paranormal-romance':true,'contemporary-romance':true,'historical-romance':true,
+  'romantic-suspense':true,'romance':true,
+  'mystery':true,'cozy-mystery':true,'detective':true,'police-procedural':true,
+  'noir':true,'legal-thriller':true,'psychological-thriller':true,'thriller':true,'spy-fiction':true,
+  'horror':true,'gothic':true,'supernatural':true,'paranormal':true,'cosmic-horror':true,
+  'historical-fiction':true,'alternate-history':true,'literary-fiction':true,
+  'coming-of-age':true,'magical-realism':true,'womens-fiction':true,
+  'chick-lit':true,'new-adult':true,'young-adult':true,'middle-grade':true,'childrens':true,
+  'adventure':true,'western':true,'war-fiction':true,'satire':true,'humour':true,
+  'science-fantasy':true,'mythology':true,'fairy-tale':true,
+  'graphic-novel':true,'manga':true,'short-stories':true,'novella':true,
+  'classics':true,'drama':true,'poetry':false,
+  'biography':false,'autobiography':false,'memoir':false,'true-crime':false,'history':false,
+  'politics':false,'philosophy':false,'psychology':false,'popular-science':false,
+  'economics':false,'business':false,'technology':false,'self-help':false,
+  'travel':false,'food-cooking':false,'art':false,'music':false,'religion':false,
+  'health':false,'nature':false,'education':false,'essays':false,
+};
+
+// Rules: [keywords[], genreKey, priority]. Sorted descending by priority.
+// Multi-word phrases must be listed before single-word broad terms.
+const GENRE_RULES=[
+  // ── Sci-Fi specific ──
+  [['hard science fiction','hard sf','hard sci fi'],'hard-sf',110],
+  [['military science fiction','military sf','military sci fi','military scifi'],'military-sf',110],
+  [['space opera'],           'space-opera',  110],
+  [['cyberpunk'],             'cyberpunk',    110],
+  [['steampunk'],             'steampunk',    110],
+  [['biopunk'],               'biopunk',      110],
+  [['dystopian fiction','dystopian','dystopia'],'dystopian',105],
+  [['post apocalyptic','postapocalyptic'],'post-apocalyptic',105],
+  [['alternate history','alternative history'],'alternate-history',105],
+  [['science fantasy'],       'science-fantasy',105],
+  [['science fiction','sci fi','scifi'],'science-fiction',100],
+  // ── Fantasy specific ──
+  [['epic fantasy'],          'epic-fantasy',  110],
+  [['dark fantasy'],          'dark-fantasy',  110],
+  [['urban fantasy'],         'urban-fantasy', 110],
+  [['romantic fantasy'],      'romantic-fantasy',110],
+  [['cozy fantasy'],          'cozy-fantasy',  110],
+  [['high fantasy'],          'high-fantasy',  110],
+  [['grimdark'],              'grimdark',      110],
+  // ── Romance specific ──
+  [['paranormal romance'],    'paranormal-romance',110],
+  [['contemporary romance'],  'contemporary-romance',110],
+  [['historical romance'],    'historical-romance',110],
+  [['romantic suspense'],     'romantic-suspense',110],
+  // ── Crime/Mystery specific ──
+  [['cozy mystery','cozy crime'],'cozy-mystery',110],
+  [['police procedural'],     'police-procedural',110],
+  [['legal thriller'],        'legal-thriller',110],
+  [['psychological thriller'],'psychological-thriller',110],
+  [['spy fiction','spy thriller','espionage fiction'],'spy-fiction',110],
+  [['cosmic horror','lovecraftian'],'cosmic-horror',110],
+  [['gothic fiction','gothic horror','dark romanticism'],'gothic',110],
+  [['historical mystery'],    'mystery',       105],
+  // ── Other specific ──
+  [['magical realism'],       'magical-realism',110],
+  [['coming of age','bildungsroman'],'coming-of-age',110],
+  [['womens fiction','women s fiction','female fiction'],'womens-fiction',110],
+  [['chick lit','chicklit'],  'chick-lit',     110],
+  [['new adult'],             'new-adult',     110],
+  [['young adult','ya fiction','ya novel','ya lit'],'young-adult',110],
+  [['middle grade'],          'middle-grade',  110],
+  [['juvenile fiction','childrens fiction','children s fiction'],'childrens',110],
+  [['graphic novel'],         'graphic-novel', 110],
+  [['manga'],                 'manga',         110],
+  [['short stories','short story collection','stories and poems'],'short-stories',105],
+  [['fairy tale','fairytale','fairy story'],'fairy-tale',105],
+  [['mythology','folklore','folk tale','myths and legends','myth and legend'],'mythology',105],
+  [['war fiction','war novel','wartime fiction'],'war-fiction',105],
+  [['historical fiction','historical novel'],'historical-fiction',100],
+  [['literary fiction'],      'literary-fiction',100],
+  // ── Non-fiction specific ──
+  [['true crime'],            'true-crime',    110],
+  [['popular science'],       'popular-science',110],
+  [['self help','personal development','personal growth'],'self-help',110],
+  [['cookbook','culinary','cooking','food and drink','recipes'],'food-cooking',110],
+  [['travel writing','travel literature','travel memoir','travel and adventure'],'travel',105],
+  [['health and wellness','health and medicine'],'health',105],
+  [['political science','current affairs','current events'],'politics',105],
+  [['religion and spirituality','spiritual memoir','faith and religion'],'religion',105],
+  // ── Broad genres (lower priority — matched after specific) ──
+  [['fantasy'],               'fantasy',        90],
+  // Fantasy cue words — only fire at lower priority if no specific match
+  [['sorcery','sorcerer','sorceress','wizard','wizards','witchcraft','witch','witches',
+     'elves','elven','fae','faeries','fairies','fairy','enchanted','enchantment',
+     'spells','spell','arcane','magic','magical',
+     'dragon','dragons','gryphon','wyvern','griffin',
+     'prophecy','chosen one','dark lord','quest for','realm','kingdom of',
+     'throne','crown','empire','court of','prince','princess','sword','staff of'],'fantasy',70],
+  [['romance','love story','love and loss'],'romance',88],
+  [['thriller','suspense'],   'thriller',       88],
+  [['mystery','detective','whodunit','whodunnit'],'mystery',88],
+  [['horror'],                'horror',         88],
+  [['gothic'],                'gothic',         85],
+  [['paranormal','supernatural','ghost stories','haunting','vampire','vampires',
+     'werewolf','werewolves','demons','demon','undead','zombie'],'paranormal',75],
+  [['adventure','quest','hero s journey'],'adventure',75],
+  [['western','cowboy','frontier','old west','outlaw'],'western',80],
+  [['satire','satirical'],    'satire',         80],
+  [['comedy','humour','humor','comic novel','absurdist'],'humour',75],
+  [['novella'],               'novella',        75],
+  [['poetry','poems','verse','haiku'],'poetry', 85],
+  [['drama','play','theatrical','stage'],'drama',80],
+  [['classics','classic literature'],'classics',85],
+  [['biography','biographical'],'biography',    90],
+  [['autobiography'],         'autobiography',  90],
+  [['memoir'],                'memoir',         90],
+  [['history','historical','world war','wwii','ww2','wwi','ww1',
+     'ancient rome','ancient greece','victorian era','medieval','renaissance',
+     'cold war','civil war'],'history',85],
+  [['philosophy','philosophical'],'philosophy', 85],
+  [['psychology','behaviour','behavior','neuroscience','human mind'],'psychology',80],
+  [['popular science','science writing','natural history','physics','biology',
+     'chemistry','astronomy','ecology','evolution','genetics'],'popular-science',75],
+  [['economics','economy','capitalism','socialism','finance','markets','monetary'],'economics',85],
+  [['business','entrepreneurship','leadership','management','startup'],'business',85],
+  [['technology','artificial intelligence','machine learning','programming',
+     'software','internet','digital revolution'],'technology',85],
+  [['politics','government','democracy','election','policy','geopolitics'],'politics',80],
+  [['art','painting','sculpture','architecture','design history'],'art',80],
+  [['music','jazz','classical music','hip hop','songwriting','musicology'],'music',80],
+  [['religion','theology','christianity','islam','hinduism','buddhism','judaism','faith'],'religion',80],
+  [['nature','wildlife','environment','ecology','conservation','natural world'],'nature',80],
+  [['health','medicine','wellness','nutrition','mental health'],'health',80],
+  [['education','teaching','learning','pedagogy'],'education',75],
+  [['essays','essay collection','essayist'],'essays',80],
+  [['travel','journey','expedition','abroad','backpacking','travelogue'],'travel',75],
+];
+// Sort by priority descending
+GENRE_RULES.sort((a,b)=>b[2]-a[2]);
+
+// Normalise genre text — handles "Sci-Fi"/"sci fi"/"SCIFI"/"S.F." → "science fiction"
+const GENRE_ALIASES=[
+  [/\bsci[\s\-\.]*fi\b/g,'science fiction'],
+  [/\bs\.f\.\b/g,'science fiction'],
+  [/\b(sf|speculative fiction)\b/g,'science fiction'],
+  [/\bya\b/g,'young adult'],
+  [/\by\.a\.\b/g,'young adult'],
+  [/\bmg\b/g,'middle grade'],
+  [/\blit[\s\-]?fic\b/g,'literary fiction'],
+  [/\bnon[\s\-]?fiction\b/g,'nonfiction'],
+  [/\bfantasy\s+romance\b/g,'romantic fantasy'],
+  [/\bromance\s+fantasy\b/g,'romantic fantasy'],
+];
+function normaliseGenreText(s){
+  let n=normStr(s);
+  for(const[re,rep]of GENRE_ALIASES)n=n.replace(re,rep);
+  return n;
 }
-function extractSeries(t){const m=t.match(/\(([^,)]+),\s*#\d+\)/);return m?m[1].trim():'';}
+
+function guessGenre(title,subjects){
+  const combined=normaliseGenreText((title||'')+' '+(subjects||''));
+  for(const[kwds,key]of GENRE_RULES){
+    for(const kw of kwds){if(combined.includes(kw)){return GENRE_LABELS[key]||key;}}
+  }
+  return 'Literary Fiction';
+}
+
+function guessFictionTag(title,subjects){
+  const combined=normaliseGenreText((title||'')+' '+(subjects||''));
+  for(const[kwds,key]of GENRE_RULES){
+    for(const kw of kwds){
+      if(combined.includes(kw)){
+        const f=GENRE_IS_FICTION[key];
+        return(f===false)?'Non-Fiction':'Fiction';
+      }
+    }
+  }
+  return 'Fiction';
+}
+
+// Normalise series name: consistent casing, strip leading The/A/An for sorting
+function normaliseSeries(s){
+  if(!s)return'';
+  return s.trim().replace(/\s+/g,' ');
+}
+
+// Normalise a genre string for analytics grouping (so "sci fi"/"Sci-Fi"/"scifi" all count as one)
+function normaliseGenreLabel(g){
+  if(!g)return'Literary Fiction';
+  return guessGenre(g,'');
+}
+
+// Ensure every book has a 'fiction' or 'non-fiction' tag (strips old incorrect ones first)
+function ensureFictionTag(book){
+  if(!book.tags)book.tags=[];
+  book.tags=book.tags.filter(t=>t!=='fiction'&&t!=='non-fiction');
+  const fTag=guessFictionTag(book.title,(book.bookshelves||'')+' '+(book.genre||'')).toLowerCase();
+  if(!book.tags.includes(fTag))book.tags=[fTag,...book.tags];
+}
+
+function extractSeries(t){const m=t.match(/\(([^,)]+),\s*#\d+\)/);return m?normaliseSeries(m[1]):'';}
 function calcSpineWidth(title,pageCount){
   const FONT_SIZE=9.5,LINE_H=1.25,PAD_V=28;
   const spineH=Math.min(230,Math.max(150,150+(pageCount||0)/7));
@@ -981,14 +1457,449 @@ async function processGoodreadsCSV(csvText){
     const title=row['Title']||'Unknown Title';
     const pageCount=parseInt(row['Number of Pages'])||0;
     const thumb=isbn?getOpenLibraryCover(isbn,'M'):'';
-    return{id:row['Book Id']||String(Date.now()+idx),title,author:row['Author']||'Unknown',pageCount,yearPublished:parseInt(row['Original Publication Year']||row['Year Published'])||null,publisher:row['Publisher']||'',binding:row['Binding']||'',isbn,myRating:parseInt(row['My Rating'])||0,avgRating:parseFloat(row['Average Rating'])||0,shelf,bookshelves:row['Bookshelves']||'',dateRead:row['Date Read']||'',dateAdded:row['Date Added']||'',userNote:(row['My Review']||'').replace(/<br\/?>/gi,'\n').replace(/<[^>]+>/g,'').trim(),genre:guessGenre(row['Title'],row['Bookshelves']),series:extractSeries(row['Title']||''),thumb,spineColor:shuffled[idx%shuffled.length],width:calcSpineWidth(title,pageCount),tags:[],fromGoodreads:true};
+    const genre=guessGenre(row['Title'],row['Bookshelves']);
+    const fTag=guessFictionTag(row['Title'],row['Bookshelves']).toLowerCase();
+    return{id:row['Book Id']||String(Date.now()+idx),title,author:row['Author']||'Unknown',pageCount,yearPublished:parseInt(row['Original Publication Year']||row['Year Published'])||null,publisher:row['Publisher']||'',binding:row['Binding']||'',isbn,myRating:parseInt(row['My Rating'])||0,avgRating:parseFloat(row['Average Rating'])||0,shelf,bookshelves:row['Bookshelves']||'',dateRead:row['Date Read']||'',dateAdded:row['Date Added']||'',userNote:(row['My Review']||'').replace(/<br\/?>/gi,'\n').replace(/<[^>]+>/g,'').trim(),genre,series:extractSeries(row['Title']||''),thumb,spineColor:shuffled[idx%shuffled.length],width:calcSpineWidth(title,pageCount),tags:[fTag],fromGoodreads:true};
   });
   setLoading(true,'Building your shelves…',90);
   library=mapped;saveLibrary();journalDone=false;_ac=null;
   setLoading(false);
   const noCover=mapped.filter(b=>!b.thumb);
   if(noCover.length)fetchCoversBackground(noCover);
+  // Enrich genre & series from Google Books for all imported books in background
+  enrichLibraryGenreAndSeries(mapped);
 }
+
+// ── Background enrichment: fetch genre & series from Google Books for ALL books ──
+// Runs after CSV import AND on library load for any book not yet enriched
+const _enrichQueue=new Set();
+let _enrichRunning=false;
+async function enrichLibraryGenreAndSeries(books){
+  books.forEach(b=>{ if(!b.genreEnriched||!b.seriesEnriched) _enrichQueue.add(b.id); });
+  if(_enrichRunning) return;
+  _enrichRunning=true;
+
+  // Group by author so the author cache fills as we process —
+  // books in the same series get consistent genre without extra API calls
+  const orderIds=()=>{
+    const ids=[..._enrichQueue];
+    const authorOrder={};
+    ids.forEach(id=>{
+      const b=library.find(x=>x.id===id);if(!b)return;
+      const ak=(b.author||'unknown').toLowerCase().replace(/[^a-z]/g,'');
+      if(!authorOrder[ak])authorOrder[ak]=[];
+      authorOrder[ak].push(id);
+    });
+    // Interleave authors so one author's books don't all run at once (API rate)
+    const groups=Object.values(authorOrder);
+    const result=[];
+    const maxLen=Math.max(...groups.map(g=>g.length));
+    for(let i=0;i<maxLen;i++) groups.forEach(g=>{if(g[i])result.push(g[i]);});
+    return result;
+  };
+
+  const BATCH=3; const DELAY=500;
+  while(_enrichQueue.size>0){
+    const ordered=orderIds();
+    const batch=ordered.slice(0,BATCH).map(id=>{_enrichQueue.delete(id);return library.find(b=>b.id===id);}).filter(Boolean);
+    // Process sequentially within batch so cache fills in order
+    for(const book of batch) await _enrichBookMetadata(book);
+    saveLibrary();_ac=null;
+    if(_enrichQueue.size>0)await new Promise(r=>setTimeout(r,DELAY));
+  }
+  _enrichRunning=false;
+  saveLibrary();journalDone=false;
+}
+
+
+// ══════════════════════════════════════════════════════════════════
+// GENRE & SERIES ENGINE v3
+// Strategy:
+//   1. Title parsing  — "(Series, #N)" in Goodreads title = ground truth
+//   2. OpenLibrary Works — curated librarian subjects + dedicated series field
+//   3. Google Books    — categories (direct map) as genre fallback
+//   4. Author cache    — once genre/series known for one book, propagate to
+//                        other books by same author with same base title pattern
+// ══════════════════════════════════════════════════════════════════
+
+// ── Direct map: OpenLibrary canonical subject tags → genre key ──
+// OL Works subjects are curated by librarians — far more reliable than GB categories
+const OL_SUBJECT_MAP = {
+  // Fantasy
+  'epic fantasy':'epic-fantasy', 'high fantasy':'high-fantasy',
+  'dark fantasy':'dark-fantasy', 'urban fantasy':'urban-fantasy',
+  'contemporary fantasy':'urban-fantasy', 'romantic fantasy':'romantic-fantasy',
+  'cozy fantasy':'cozy-fantasy', 'grimdark':'grimdark',
+  'sword and sorcery':'epic-fantasy', 'heroic fantasy':'epic-fantasy',
+  'fantasy fiction':'fantasy', 'fantasy':'fantasy',
+  'magic':'fantasy', 'wizards':'fantasy', 'dragons':'fantasy',
+  'elves':'fantasy', 'faeries':'fantasy', 'witches':'fantasy',
+  // Science Fiction
+  'science fiction':'science-fiction', 'space opera':'space-opera',
+  'cyberpunk':'cyberpunk', 'steampunk':'steampunk', 'biopunk':'biopunk',
+  'dystopian fiction':'dystopian', 'dystopia':'dystopian',
+  'post-apocalyptic fiction':'post-apocalyptic', 'post apocalyptic':'post-apocalyptic',
+  'military science fiction':'military-sf', 'hard science fiction':'hard-sf',
+  'alternate history':'alternate-history', 'time travel':'science-fiction',
+  'space exploration':'science-fiction', 'artificial intelligence':'science-fiction',
+  // Romance
+  'romance fiction':'romance', 'love stories':'romance',
+  'paranormal romance':'paranormal-romance', 'contemporary romance':'contemporary-romance',
+  'historical romance':'historical-romance', 'romantic suspense':'romantic-suspense',
+  // Mystery / Thriller
+  'mystery fiction':'mystery', 'detective fiction':'mystery', 'detective and mystery stories':'mystery',
+  'cozy mystery':'cozy-mystery', 'police procedural':'police-procedural',
+  'noir fiction':'noir', 'hard-boiled fiction':'noir',
+  'thriller':'thriller', 'suspense fiction':'thriller',
+  'psychological thriller':'psychological-thriller',
+  'legal thriller':'legal-thriller', 'spy fiction':'spy-fiction',
+  'espionage fiction':'spy-fiction',
+  // Horror
+  'horror fiction':'horror', 'horror':'horror',
+  'gothic fiction':'gothic', 'supernatural fiction':'paranormal',
+  'ghost stories':'horror', 'vampire fiction':'paranormal',
+  'cosmic horror':'cosmic-horror',
+  // Historical / Literary
+  'historical fiction':'historical-fiction', 'historical novels':'historical-fiction',
+  'literary fiction':'literary-fiction', 'psychological fiction':'literary-fiction',
+  'magical realism':'magical-realism', 'satire':'satire',
+  'coming of age':'coming-of-age', 'bildungsroman':'coming-of-age',
+  'war fiction':'war-fiction', 'war stories':'war-fiction',
+  // Adventure / Other fiction
+  'adventure fiction':'adventure', 'adventure stories':'adventure',
+  'western fiction':'western', 'science fantasy':'science-fantasy',
+  'fairy tales':'fairy-tale', 'fairy stories':'fairy-tale',
+  'mythology':'mythology', 'folklore':'mythology',
+  'humor fiction':'humour', 'humorous fiction':'humour',
+  'comic fiction':'humour', 'satire and humor':'satire',
+  // Young Adult / Children
+  'young adult fiction':'young-adult', 'ya fiction':'young-adult',
+  "children's fiction":'childrens', "children's stories":'childrens',
+  'middle grade':'middle-grade', 'juvenile fiction':'childrens',
+  // Graphic / Short form
+  'graphic novels':'graphic-novel', 'comics':'graphic-novel',
+  'manga':'manga', 'short stories':'short-stories',
+  'novellas':'novella', 'poetry':'poetry',
+  // Non-fiction
+  'biography':'biography', 'biographies':'biography',
+  'autobiography':'autobiography', 'autobiographies':'autobiography',
+  'memoirs':'memoir', 'memoir':'memoir',
+  'true crime':'true-crime', 'true crime stories':'true-crime',
+  'history':'history', 'world history':'history',
+  'philosophy':'philosophy', 'philosophical works':'philosophy',
+  'psychology':'psychology', 'popular psychology':'psychology',
+  'self-help':'self-help', 'personal development':'self-help',
+  'popular science':'popular-science', 'science writing':'popular-science',
+  'economics':'economics', 'business':'business',
+  'technology':'technology', 'politics':'politics',
+  'travel writing':'travel', 'travel literature':'travel',
+  'cooking':'food-cooking', 'cookbooks':'food-cooking',
+  'health':'health', 'medicine':'health',
+  'religion':'religion', 'spirituality':'religion',
+  'music':'music', 'art':'art', 'education':'education',
+  'essays':'essays',
+};
+
+// ── Direct map: Google Books category paths → genre key ──
+// GB returns "Fiction / Fantasy / Epic" style — map the most specific segment
+const GB_LEAF_MAP = {
+  // Fantasy
+  'epic':'epic-fantasy', 'dark fantasy':'dark-fantasy', 'urban':'urban-fantasy',
+  'paranormal':'paranormal-romance', 'romantic fantasy':'romantic-fantasy',
+  'cozy':'cozy-fantasy',
+  // Sci-Fi
+  'space opera':'space-opera', 'cyberpunk':'cyberpunk', 'steampunk':'steampunk',
+  'military':'military-sf', 'hard science fiction':'hard-sf',
+  'apocalyptic & post-apocalyptic':'post-apocalyptic', 'dystopian':'dystopian',
+  // Romance
+  'romantic suspense':'romantic-suspense', 'contemporary':'contemporary-romance',
+  // Mystery
+  'cozy':'cozy-mystery', 'police procedural':'police-procedural',
+  'psychological':'psychological-thriller', 'legal':'legal-thriller',
+  'spy thriller':'spy-fiction',
+  // Fiction broad
+  'literary':'literary-fiction', 'historical':'historical-fiction',
+  'magical realism':'magical-realism', 'coming of age':'coming-of-age',
+  'action & adventure':'adventure', 'westerns':'western',
+  'horror':'horror', 'ghost':'horror', 'war & military':'war-fiction',
+  'satire':'satire', 'humorous':'humour',
+  'fairy tales, folk tales, legends & mythology':'fairy-tale',
+  'fantasy & magic':'fantasy', 'science fiction':'science-fiction',
+  'fantasy':'fantasy', 'romance':'romance', 'thriller':'thriller',
+  'mystery & detective':'mystery', 'suspense':'thriller',
+  'graphic novels':'graphic-novel',
+  // Non-fiction top-level
+  'biography & autobiography':'biography', 'personal memoirs':'memoir',
+  'history':'history', 'true crime':'true-crime',
+  'psychology':'psychology', 'self-help':'self-help',
+  'business & economics':'business', 'science':'popular-science',
+  'philosophy':'philosophy', 'political science':'politics',
+  'travel':'travel', 'cooking':'food-cooking',
+  'health & fitness':'health', 'religion':'religion',
+  'music':'music', 'art':'art', 'education':'education',
+  'literary collections':'essays',
+};
+
+function mapGBCategories(cats) {
+  if (!cats || !cats.length) return null;
+  // Walk each category path from most specific (last segment) to least
+  for (const cat of cats) {
+    const parts = cat.split('/').map(s => s.trim().toLowerCase());
+    // Try from most specific segment backwards
+    for (let i = parts.length - 1; i >= 0; i--) {
+      const seg = parts[i];
+      if (GB_LEAF_MAP[seg]) return GB_LEAF_MAP[seg];
+      // Try two-segment combo
+      if (i > 0) {
+        const two = parts[i-1] + ' / ' + seg;
+        if (GB_LEAF_MAP[two]) return GB_LEAF_MAP[two];
+      }
+    }
+  }
+  return null;
+}
+
+function mapOLSubjects(subjects) {
+  if (!subjects || !subjects.length) return null;
+  // Sort by length asc — shorter subjects are usually the most canonical genre labels
+  const sorted = [...subjects].filter(s => s.length < 80).sort((a, b) => a.length - b.length);
+  for (const s of sorted) {
+    const key = OL_SUBJECT_MAP[s.toLowerCase().trim()];
+    if (key) return key;
+  }
+  // Fallback: run through keyword rules on joined subjects
+  const combined = normaliseGenreText(sorted.slice(0, 15).join(' '));
+  for (const [kwds, key] of GENRE_RULES) {
+    for (const kw of kwds) { if (combined.includes(kw)) return key; }
+  }
+  return null;
+}
+
+// ── Author→genre/series cache ──
+// Once we resolve a book by an author, cache it so all books by that author
+// in the same series get consistent genre without extra API calls
+const _authorCache = {}; // authorKey → { genre, seriesMap: {seriesName: genre} }
+
+function _authorKey(book) {
+  return (book.author || '').toLowerCase().replace(/[^a-z]/g, '');
+}
+
+function _cacheAuthorData(book) {
+  if (!book.author) return;
+  const key = _authorKey(book);
+  if (!_authorCache[key]) _authorCache[key] = { genre: null, seriesMap: {} };
+  const cache = _authorCache[key];
+  if (book.genre && book.genre !== 'Literary Fiction') cache.genre = book.genre;
+  if (book.series && book.genre && book.genre !== 'Literary Fiction') {
+    cache.seriesMap[book.series.toLowerCase()] = book.genre;
+  }
+}
+
+function _lookupAuthorCache(book) {
+  const key = _authorKey(book);
+  const cache = _authorCache[key];
+  if (!cache) return null;
+  // If we know this series, return its genre
+  if (book.series) {
+    const sg = cache.seriesMap[book.series.toLowerCase()];
+    if (sg) return sg;
+  }
+  return cache.genre || null;
+}
+
+// ── Core enrichment ──
+async function _enrichBookMetadata(book) {
+  let changed = false;
+  const cleanTitle = book.title.split('(')[0].trim();
+
+  // ── Step 1: Parse Goodreads title for series (highest fidelity) ──
+  const titleSeries = extractSeries(book.title) || _seriesFromSubtitle(book.title);
+  if (titleSeries && book.series !== titleSeries) {
+    book.series = titleSeries; changed = true;
+  }
+
+  // ── Step 2: Check author cache first (avoids API calls for series books) ──
+  const cachedGenre = _lookupAuthorCache(book);
+  if (cachedGenre && (!book.genre || book.genre === 'Literary Fiction')) {
+    book.genre = cachedGenre; changed = true;
+  }
+
+  // ── Step 3: OpenLibrary Works endpoint — most accurate for genre & series ──
+  // Strategy: search → get work key → fetch works/{key}.json for curated data
+  try {
+    const olQ = book.isbn
+      ? 'isbn=' + book.isbn
+      : 'title=' + encodeURIComponent(cleanTitle) + '&author=' + encodeURIComponent(book.author);
+    const sr = await fetch(
+      'https://openlibrary.org/search.json?' + olQ + '&fields=key,title,subject,series,isbn,cover_i,first_publish_year&limit=3',
+      { signal: AbortSignal.timeout(6000) }
+    );
+    if (sr.ok) {
+      const sd = await sr.json();
+      // Pick the best matching result
+      const docs = sd.docs || [];
+      let doc = docs[0];
+      if (docs.length > 1) {
+        // Score by title match
+        const ct = cleanTitle.toLowerCase();
+        const scored = docs.map(d => {
+          const t = (d.title || '').toLowerCase();
+          return { d, sc: t === ct ? 3 : t.includes(ct) ? 2 : ct.includes(t) ? 1 : 0 };
+        }).sort((a, b) => b.sc - a.sc);
+        doc = scored[0].d;
+      }
+      if (doc) {
+        // Series from search result
+        if (!book.series && doc.series?.length) {
+          const sn = normaliseSeries(doc.series[0]);
+          if (sn) { book.series = sn; changed = true; }
+        }
+        // Genre from subjects
+        if (!book.genre || book.genre === 'Literary Fiction') {
+          if (doc.subject?.length) {
+            const key = mapOLSubjects(doc.subject);
+            if (key) {
+              const label = GENRE_LABELS[key] || key;
+              book.genre = label; changed = true;
+            }
+          }
+        }
+        // Cover fallback
+        if (!book.thumb && doc.cover_i) {
+          book.thumb = 'https://covers.openlibrary.org/b/id/' + doc.cover_i + '-M.jpg';
+          changed = true;
+        }
+        // If we have the OL work key, fetch the works endpoint for deeper data
+        if (doc.key && (!book.series || !book.genre || book.genre === 'Literary Fiction')) {
+          try {
+            const wr = await fetch('https://openlibrary.org' + doc.key + '.json',
+              { signal: AbortSignal.timeout(5000) });
+            if (wr.ok) {
+              const wd = await wr.json();
+              // Works endpoint has a dedicated `series` array (more reliable than search)
+              if (!book.series && wd.series?.length) {
+                const sn = normaliseSeries(typeof wd.series[0] === 'string'
+                  ? wd.series[0]
+                  : wd.series[0]?.name || '');
+                if (sn) { book.series = sn; changed = true; }
+              }
+              // Works subjects are curated — often more specific than search subjects
+              if (!book.genre || book.genre === 'Literary Fiction') {
+                const wSubjects = [
+                  ...(wd.subjects || []),
+                  ...(wd.subject_places || []),
+                  ...(wd.subject_times || []),
+                ].filter(s => typeof s === 'string');
+                if (wSubjects.length) {
+                  const key = mapOLSubjects(wSubjects);
+                  if (key) { book.genre = GENRE_LABELS[key] || key; changed = true; }
+                }
+              }
+            }
+          } catch (_) {}
+        }
+      }
+    }
+  } catch (_) {}
+
+  // ── Step 4: Google Books — genre via categories, series via seriesInfo ──
+  const needsGenre = !book.genre || book.genre === 'Literary Fiction';
+  const needsSeries = !book.series;
+  if (needsGenre || needsSeries || !book.avgRating || !book.pageCount) {
+    const gQuery = book.isbn
+      ? 'isbn:' + book.isbn
+      : 'intitle:' + encodeURIComponent(cleanTitle) + '+inauthor:' + encodeURIComponent(book.author);
+    try {
+      const gr = await fetch(
+        'https://www.googleapis.com/books/v1/volumes?q=' + encodeURIComponent(gQuery) +
+        '&maxResults=3&fields=items/volumeInfo(title,subtitle,categories,seriesInfo,industryIdentifiers,imageLinks,averageRating,pageCount,publishedDate,publisher)',
+        { signal: AbortSignal.timeout(6000) }
+      );
+      if (gr.ok) {
+        const gd = await gr.json();
+        const items = gd.items || [];
+        // Pick best title match
+        const ct = cleanTitle.toLowerCase();
+        const vi = items.map(it => {
+          const t = (it.volumeInfo?.title || '').toLowerCase();
+          return { vi: it.volumeInfo, sc: t === ct ? 3 : t.includes(ct) ? 2 : ct.includes(t) ? 1 : 0 };
+        }).sort((a, b) => b.sc - a.sc)[0]?.vi;
+
+        if (vi) {
+          // Series from seriesInfo
+          if (needsSeries && vi.seriesInfo) {
+            const sn = (
+              vi.seriesInfo.bookSeries?.[0]?.seriesDisplayName ||
+              vi.seriesInfo.shortSeriesBookTitle || ''
+            ).trim();
+            if (sn) { book.series = normaliseSeries(sn); changed = true; }
+          }
+          // Series from subtitle
+          if (!book.series && vi.subtitle) {
+            const s = _seriesFromSubtitle(vi.subtitle) || _seriesFromSubtitle(vi.title + ' ' + vi.subtitle);
+            if (s) { book.series = s; changed = true; }
+          }
+          // Genre from categories
+          if (needsGenre && vi.categories?.length) {
+            const key = mapGBCategories(vi.categories);
+            if (key) {
+              book.genre = GENRE_LABELS[key] || key; changed = true;
+            } else {
+              // Last-resort: keyword match on raw category string
+              const derived = guessGenre(book.title, vi.categories.join(' '));
+              if (derived && derived !== 'Literary Fiction') { book.genre = derived; changed = true; }
+            }
+          }
+          // Fill blanks
+          if (!book.thumb && vi.imageLinks) {
+            const raw = vi.imageLinks.medium || vi.imageLinks.thumbnail || '';
+            if (raw) { book.thumb = raw.replace('http:', 'https:').replace('zoom=1', 'zoom=2').replace('&edge=curl', ''); changed = true; }
+          }
+          if (!book.publisher && vi.publisher) { book.publisher = vi.publisher; changed = true; }
+          if (!book.avgRating && vi.averageRating) { book.avgRating = parseFloat(vi.averageRating.toFixed(2)); changed = true; }
+          if (!book.pageCount && vi.pageCount) { book.pageCount = vi.pageCount; book.width = calcSpineWidth(book.title, book.pageCount); changed = true; }
+          if (!book.yearPublished && vi.publishedDate) { book.yearPublished = parseInt(vi.publishedDate) || null; changed = true; }
+          if (!book.isbn && vi.industryIdentifiers) {
+            const id13 = vi.industryIdentifiers.find(x => x.type === 'ISBN_13');
+            const id10 = vi.industryIdentifiers.find(x => x.type === 'ISBN_10');
+            if (id13 || id10) { book.isbn13 = id13?.identifier || ''; book.isbn10 = id10?.identifier || ''; book.isbn = book.isbn13 || book.isbn10; changed = true; }
+          }
+        }
+      }
+    } catch (_) {}
+  }
+
+  // ── Step 5: Propagate to author cache so series-mates get consistent genre ──
+  _cacheAuthorData(book);
+
+  book.genreEnriched = true;
+  book.seriesEnriched = true;
+  if (changed) {
+    ensureFictionTag(book);
+    if (currentBookId === book.id) {
+      const gEl = document.getElementById('modal-genre');
+      const sEl = document.getElementById('modal-series');
+      if (gEl && book.genre) gEl.value = book.genre;
+      if (sEl) sEl.value = book.series || '';
+    }
+  }
+}
+
+// Parse "(Series Name, #N)" and subtitle patterns
+function _seriesFromSubtitle(t) {
+  if (!t) return '';
+  // Goodreads pattern: "(Series Name, #N)" or "(Series Name, Book N)"
+  let m = t.match(/\(([^,)]{3,60}),\s*(?:#|book\s+)\d+(?:\.\d+)?\)/i);
+  if (m) return normaliseSeries(m[1]);
+  // Standalone "Series Name, #N"
+  m = t.match(/^(.{3,60}),\s*(?:#|book\s+)\d+(?:\.\d+)?$/i);
+  if (m) return normaliseSeries(m[1]);
+  // "A [Series] Novel" in subtitle
+  m = t.match(/^a\s+(.{3,50})\s+novel$/i);
+  if (m) return normaliseSeries(m[1]);
+  return '';
+}
+
 
 // ══ STORAGE — localStorage + Firestore cloud sync ══
 const LOCAL_KEY='pp_v8';
@@ -1003,8 +1914,18 @@ function loadLibrary(){
     if(r){
       library=JSON.parse(r);
       let updated=false;
-      library.forEach(b=>{if(!b.thumb&&b.isbn){b.thumb=getOpenLibraryCover(b.isbn,'M');updated=true;}if(!b.tags)b.tags=[];});
+      library.forEach(b=>{
+        if(!b.thumb&&b.isbn){b.thumb=getOpenLibraryCover(b.isbn,'M');updated=true;}
+        if(!b.tags)b.tags=[];
+        // Retroactively add fiction/non-fiction tag and fix "Fiction" genre to specific name
+        const hasFTag=b.tags.some(t=>t==='fiction'||t==='non-fiction');
+        if(!hasFTag){const ft=guessFictionTag(b.title,(b.bookshelves||'')+' '+(b.genre||'')).toLowerCase();b.tags=[ft,...b.tags];updated=true;}
+        if(b.genre==='Fiction'){b.genre=guessGenre(b.title,(b.bookshelves||''));updated=true;}
+      });
       if(updated)saveLibraryLocal();
+      // Enrich any book that hasn't been verified yet (genre/series from APIs)
+      const needsEnrich=library.filter(b=>!b.genreEnriched||!b.seriesEnriched);
+      if(needsEnrich.length)setTimeout(()=>enrichLibraryGenreAndSeries(needsEnrich),1500);
       return true;
     }
   }catch(e){}
@@ -1071,6 +1992,9 @@ async function loadCloudData(uid){
       updateSyncStatus(`Loaded ${library.length} books ✓`);
       showToast(`☁ Library restored — ${library.length} books`);
       setTimeout(()=>updateSyncStatus('Ready'),4000);
+      // Enrich any books that haven't been verified yet
+      const needsEnrich=library.filter(b=>!b.genreEnriched||!b.seriesEnriched);
+      if(needsEnrich.length)setTimeout(()=>enrichLibraryGenreAndSeries(needsEnrich),2000);
     } else {
       // No cloud data yet — push local to cloud
       loadLibrary();
@@ -1297,45 +2221,144 @@ function buildShelfRow(chunk,shelfNum,root){
 const bookInput=document.getElementById('book-input');
 const resultsBox=document.getElementById('results-box');
 let searchTimer;
+// Store rich search result data keyed by doc id so onclick can access full object
+let _searchDocs={};
+
 bookInput.addEventListener('input',e=>{
   clearTimeout(searchTimer);const q=e.target.value.trim();
   if(q.length<2){resultsBox.style.display='none';return;}
   searchTimer=setTimeout(()=>doSearch(q),380);
 });
+
 async function doSearch(q){
   resultsBox.style.display='block';
   resultsBox.innerHTML='<div style="padding:18px;text-align:center;opacity:.4;font-style:italic;font-family:Inter;font-size:11px">Searching…</div>';
+  _searchDocs={};
   try{
-    const r=await fetch('https://openlibrary.org/search.json?q='+encodeURIComponent(q)+'&fields=key,title,author_name,first_publish_year,number_of_pages_median,subject,isbn,cover_i&limit=7');
+    // Fetch rich fields including ratings, publisher, language, additional authors
+    const r=await fetch(
+      'https://openlibrary.org/search.json?q='+encodeURIComponent(q)+
+      '&fields=key,title,author_name,author_key,first_publish_year,number_of_pages_median,'+
+      'subject,isbn,cover_i,publisher,ratings_average,ratings_count,language,'+
+      'edition_count,first_sentence,ia&limit=10'
+    );
     const d=await r.json();
     if(!d.docs?.length){resultsBox.innerHTML='<div style="padding:18px;text-align:center;opacity:.4;font-family:Inter;font-size:11px">No results found</div>';return;}
-    resultsBox.innerHTML=d.docs.map(doc=>{
-      const title=doc.title||'Unknown Title';const author=doc.author_name?.[0]||'Unknown Author';
-      const year=doc.first_publish_year||'';const pages=doc.number_of_pages_median||0;
-      const isbn=doc.isbn?.[0]||'';const coverId=doc.cover_i;
+    resultsBox.innerHTML=d.docs.map((doc,i)=>{
+      const uid='sr_'+i+'_'+Date.now();
+      _searchDocs[uid]=doc;
+      const title=doc.title||'Unknown Title';
+      const author=doc.author_name?.[0]||'Unknown Author';
+      const year=doc.first_publish_year||'';
+      const pages=doc.number_of_pages_median||0;
+      const isbn=(doc.isbn||[]).find(x=>x.length===13)||(doc.isbn||[])[0]||'';
+      const coverId=doc.cover_i;
       const thumb=coverId?`https://covers.openlibrary.org/b/id/${coverId}-S.jpg`:(isbn?`https://covers.openlibrary.org/b/isbn/${isbn}-S.jpg`:'');
-      const genre=(doc.subject||['Fiction'])[0];
-      const safeTitle=title.replace(/\\/g,'\\\\').replace(/'/g,"\\'");const safeAuthor=author.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-      const safeGenre=genre.replace(/\\/g,'\\\\').replace(/'/g,"\\'");const safeIsbn=isbn.replace(/'/g,"\\'");
-      const safeCoverId=coverId||'';
-      const id='ol_'+(doc.key||'').replace(/\//g,'_')+'_'+Date.now();
-      return`<div class="search-item" onclick="addBookManual('${id}','${safeTitle}','${safeAuthor}',${pages},'${safeGenre}','${safeIsbn}','${safeCoverId}',${year||0})">
-        ${thumb?`<img src="${thumb}" style="width:30px;height:42px;object-fit:cover;border-radius:3px;flex-shrink:0" onerror="this.style.display='none'">`:`<div style="width:30px;height:42px;background:var(--teal);border-radius:3px;flex-shrink:0"></div>`}
-        <div style="min-width:0"><p style="font-family:Inter;font-size:11px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${title}</p><p style="font-family:Inter;font-size:9px;opacity:.5">${author}${year?' · '+year:''}</p></div>
+      const avgRating=doc.ratings_average?parseFloat(doc.ratings_average.toFixed(2)):0;
+      return`<div class="search-item" onclick="addBookManual('${uid}')">
+        ${thumb
+          ?`<img src="${thumb}" style="width:30px;height:42px;object-fit:cover;border-radius:3px;flex-shrink:0" onerror="this.style.display='none'">`
+          :`<div style="width:30px;height:42px;background:var(--teal);border-radius:3px;flex-shrink:0"></div>`}
+        <div style="min-width:0;flex:1">
+          <p style="font-family:Inter;font-size:11px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${title}</p>
+          <p style="font-family:Inter;font-size:9px;opacity:.5">${author}${year?' · '+year:''}${pages?' · '+pages+'p':''}</p>
+        </div>
+        ${avgRating?`<span style="font-family:Inter;font-size:9px;font-weight:700;color:var(--mustard);flex-shrink:0">★${avgRating}</span>`:''}
       </div>`;
     }).join('');
   }catch(e){resultsBox.innerHTML='<div style="padding:18px;text-align:center;opacity:.4;font-family:Inter;font-size:11px">Search unavailable</div>';}
 }
 document.addEventListener('click',e=>{if(!resultsBox.contains(e.target)&&e.target!==bookInput)resultsBox.style.display='none';});
 
-function addBookManual(id,title,author,pageCount,genre,isbn,coverId,year){
-  if(library.find(b=>b.id===id)){resultsBox.style.display='none';return;}
+// ── Add a book manually with full CSV-parity data ──
+async function addBookManual(uid){
+  const doc=_searchDocs[uid];if(!doc)return;
+  const dupKey='ol_'+(doc.key||'').replace(/\//g,'_');
+  if(library.find(b=>b.id===dupKey)){resultsBox.style.display='none';return;}
+
+  // ── 1. Extract everything OpenLibrary search gave us ──
+  const title=doc.title||'Unknown Title';
+  const author=doc.author_name?.[0]||'Unknown Author';
+  // Additional authors (like Goodreads "Additional Authors" column)
+  const additionalAuthors=(doc.author_name||[]).slice(1).join(', ');
+  const year=doc.first_publish_year||null;
+  const pages=doc.number_of_pages_median||0;
+  // Prefer ISBN-13 to match Goodreads export
+  const isbn13=(doc.isbn||[]).find(x=>x.length===13)||'';
+  const isbn10=(doc.isbn||[]).find(x=>x.length===10)||'';
+  const isbn=isbn13||isbn10;
+  const coverId=doc.cover_i;
+  const publisher=(doc.publisher||[])[0]||'';
+  const avgRating=doc.ratings_average?parseFloat(doc.ratings_average.toFixed(2)):0;
+  // Derive genre from subjects (same guessGenre logic as CSV import)
+  const subjectStr=(doc.subject||[]).join(' ');
+  const genre=guessGenre(title,subjectStr);
+  const fTag=guessFictionTag(title,subjectStr).toLowerCase();
+  const series=extractSeries(title);
   let thumb='';
   if(coverId)thumb=`https://covers.openlibrary.org/b/id/${coverId}-M.jpg`;
   else if(isbn)thumb=`https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`;
+
+  // ── 2. Immediately add to library with all available data ──
   const idx=library.length;
-  library.push({id,title,author,pageCount,genre,thumb,isbn,series:extractSeries(title),myRating:0,avgRating:0,userNote:'',tags:[],shelf:'to-read',spineColor:SPINE_COLORS[idx%SPINE_COLORS.length],width:calcSpineWidth(title,pageCount),yearPublished:year||null,dateRead:'',dateAdded:new Date().toISOString().slice(0,10)});
-  bookInput.value='';resultsBox.style.display='none';saveLibrary();_ac=null;renderLibrary();journalDone=false;
+  const bookObj={
+    id:dupKey,
+    title,
+    author,
+    additionalAuthors,
+    pageCount:pages,
+    genre,
+    series,
+    thumb,
+    isbn:isbn13||isbn10,
+    isbn10,
+    isbn13,
+    myRating:0,
+    avgRating,
+    publisher,
+    binding:'',
+    yearPublished:year,
+    dateRead:'',
+    dateAdded:new Date().toISOString().slice(0,10),
+    bookshelves:'to-read',
+    userNote:'',
+    tags:[fTag],                 // ← Fiction / Non-Fiction pre-populated
+    shelf:'to-read',
+    spineColor:SPINE_COLORS[idx%SPINE_COLORS.length],
+    width:calcSpineWidth(title,pages),
+    fromManual:true,
+    enriched:false,
+  };
+  library.push(bookObj);
+  bookInput.value='';resultsBox.style.display='none';
+  saveLibrary();_ac=null;renderLibrary();journalDone=false;
+
+  // ── 3. Background enrichment: fetch Works page + Google Books for missing fields ──
+  enrichManualBook(bookObj);
+}
+
+async function enrichManualBook(book){
+  // Use the unified metadata enrichment (Google Books + OpenLibrary for genre/series/cover)
+  await _enrichBookMetadata(book);
+
+  // Additionally try OpenLibrary Works endpoint for description
+  if(!book.olDescription){
+    const olKey=book.id.replace('ol_','').replace(/_[^_]*$/,'').replace(/_/g,'/');
+    try{
+      const wr=await fetch('https://openlibrary.org'+olKey+'.json',{signal:AbortSignal.timeout(4000)});
+      if(wr.ok){
+        const wd=await wr.json();
+        if(wd.description){
+          const desc=typeof wd.description==='string'?wd.description:wd.description?.value||'';
+          if(desc)book.olDescription=desc.slice(0,800);
+        }
+      }
+    }catch(_){}
+  }
+
+  book.enriched=true;
+  saveLibrary();_ac=null;
+  if(currentBookId===book.id)openBookModal(book.id);
 }
 
 // ══ MODAL — cover in modal with open book fallback ══
@@ -1442,8 +2465,11 @@ function openBookModal(id){
   if(book.publisher)meta.push('Publisher: '+book.publisher);
   if(book.binding)meta.push('Format: '+book.binding);
   if(book.avgRating)meta.push('Avg Rating: '+book.avgRating+' ★');
+  if(book.additionalAuthors)meta.push('Also by: '+book.additionalAuthors);
+  if(book.isbn13||book.isbn)meta.push('ISBN: '+(book.isbn13||book.isbn));
   if(book.dateRead)meta.push('Date Read: '+book.dateRead);
   if(book.dateAdded)meta.push('Date Added: '+book.dateAdded);
+
   document.getElementById('modal-meta').innerHTML=meta.join('<br>');
   renderStars(book.myRating||0);renderTags();
 }
